@@ -4,14 +4,14 @@ import { ErrorMessage, webAPIUrl } from "./Settings"
 type SignUpRequest = {
     email: string,
     password: string,
-    userName?: string,
+    userName: string,
     phoneNumber?: string,
     firstName?: string,
     lastName?: string,
     address?: string
 };
 
-type SignUpResponse = {
+export type SignUpResponse = {
     userId: string,
     email: string
 };
