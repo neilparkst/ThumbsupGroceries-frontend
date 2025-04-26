@@ -21,7 +21,7 @@ type SignInRequest = {
     password: string
 };
 
-type SignInResponse = {
+export type SignInResponse = {
     token: string
 };
 
