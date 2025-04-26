@@ -26,3 +26,8 @@ export const userSlice = createSlice({
         },
     }
 })
+
+// ACTION
+export const {
+    registerTokenAndUserInfo
+} = userSlice.actions;
