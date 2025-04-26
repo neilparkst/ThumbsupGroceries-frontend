@@ -4,7 +4,7 @@ import { ErrorMessage, webAPIUrl } from "./Settings";
 type UserRole = 'customer' | 'admin';
 type UserMembershipStatus = 'active' | 'pastDue' | 'canceled';
 
-type UserInfo = {
+export type UserInfo = {
     userId: string,
     email: string,
     username: string,
