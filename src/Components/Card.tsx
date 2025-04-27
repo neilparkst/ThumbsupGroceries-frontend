@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import './Styles/Card.scss';
 
-const Card = ({title, children}: {title?: string, children: ReactNode}) => {
+const Card = ({title, children, maxWidth = 500}: {title?: string, children: ReactNode, maxWidth?: number}) => {
     return (
-        <div className='Card'>
+        <div className='Card' style={{maxWidth: `${maxWidth}px`}}>
             {title && <CardTitle>{title}</CardTitle>}
             {children}
         </div>
