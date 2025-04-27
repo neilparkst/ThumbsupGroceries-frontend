@@ -47,7 +47,7 @@ type ProductSimple = {
     reviewCount: number
 };
 
-type CategoryTree = {
+export type CategoryTree = {
     categoryId: number,
     name: string,
     children: CategoryTree
