@@ -21,6 +21,7 @@ import AdminProductAddPage from './Pages/Admin/Products/New/AdminProductAddPage'
 import { getStore } from './Data/GlobalState/Store';
 import { Provider } from 'react-redux';
 import NotFoundPage from './Pages/NotFoundPage';
+import Header from './Components/Header';
 
 const store = getStore();
 function App() {
@@ -28,6 +29,7 @@ function App() {
     <div className="App">
       <Provider store={store}>
         <BrowserRouter>
+          <Header />
           <Routes>
             <Route path='' element={<HomePage />} />
             <Route path='signin' element={<SignInPage />} />

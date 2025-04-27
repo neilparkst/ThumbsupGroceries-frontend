@@ -1,0 +1,142 @@
+.HeaderContainer{
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .Header {
+        display: flex;
+        gap: 100px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #fff;
+        max-width: 1200px;
+        margin: 0 auto;
+      
+        .Group {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .SearchGroup {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+      
+        .Categories {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        
+            svg {
+                color: #1976d2; // Primary color
+                font-size: 60px;
+            }
+        
+            svg:hover + span{
+                color: #1976d2;
+            }
+            
+            span {
+                color: #666;
+        
+                &:hover{
+                    color: #1976d2;
+                }
+            }
+        }
+      
+        .Logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        
+            svg {
+                color: #f0f003;
+                font-size: 64px;
+            }
+        
+            .LogoLetter {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                
+                span {
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: #1976d2;
+                    margin: 0;
+                }
+            
+                span:nth-child(2) {
+                    font-size: 30px;
+                    font-weight: normal;
+                    color: #f0f003;
+                    text-align: left;
+                    margin-top: -10px;
+                }
+            }
+        }
+      
+        .SearchBar {
+            flex: 1;
+            border: 1px solid #1976d2;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        
+            input {
+                border: none;
+                outline: none;
+                width: 100%;
+                background-color: transparent;
+                font-size: 16px;
+                padding: 0px;
+        
+                &::placeholder {
+                    color: #aaa;
+                }
+            }
+        }
+      
+        .UserRelated {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-weight: bold;
+        
+            .My, .Trolley {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                cursor: pointer;
+                font-size: 16px;
+        
+                svg {
+                    color: #1976d2;
+                    font-size: 48px;
+                }
+        
+                svg:hover + span{
+                    color: #1976d2;
+                }
+                
+                span {
+                    color: #666;
+        
+                    &:hover{
+                        color: #1976d2;
+                    }
+                }
+            }
+        }
+    }
+}
+  
