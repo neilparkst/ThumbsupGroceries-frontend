@@ -5,14 +5,41 @@ import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select,
 import { Controller, useForm } from 'react-hook-form';
 import CategorySelection from '../Components/CategorySelection';
 import ImageDragAndDropUploader from '../../../../Components/ImageDragAndDropUploader';
+import { useSelector } from 'react-redux';
+import { GlobalState } from '../../../../Data/GlobalState/Store';
+import { addProduct, ProductAddRequest } from '../../../../Data/ProductData';
+import NotFoundPage from '../../../NotFoundPage';
+import { isErrorMessage } from '../../../../Data/Util';
+import { ErrorMessage } from '../../../../Data/Settings';
 
 const AdminProductAddPage = () => {
-    const { handleSubmit, control, formState: {errors} } = useForm({
+    const token = useSelector((state: GlobalState) => state.user.token);
+    const userRole = useSelector((state: GlobalState) => state.user.info?.role);
+
+    const { handleSubmit, control, reset, formState: {errors} } = useForm({
         mode: 'onBlur',
     });
 
-    const onSubmit = (formData: any) => {
-        console.log(formData);
+    const onSubmit = async (data: any) => {
+        const formData = data as ProductAddRequest;
+        formData.categories = formData.categories.filter(category => (category as (number | '')) !== '')
+    
+        if(token){
+            const response = await addProduct(formData, token);
+            if(isErrorMessage(response)){
+                alert((response as ErrorMessage).errorMessage);
+                return;
+            }
+
+            alert("product added succesfully");
+            reset();
+        } else{
+            console.log("token doesn't exist");
+        }
+    }
+
+    if(!userRole || userRole !== 'Admin'){
+        return <NotFoundPage />;
     }
 
     return (

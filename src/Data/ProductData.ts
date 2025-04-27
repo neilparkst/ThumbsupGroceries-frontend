@@ -16,7 +16,7 @@ type Product = {
     reviewCount: number
 };
 
-type ProductAddRequest = {
+export type ProductAddRequest = {
     name: string,
     price: number,
     priceUnitType: PriceUnitType,
