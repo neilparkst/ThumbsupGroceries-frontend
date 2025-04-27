@@ -70,7 +70,7 @@ const CategorySelection = (
                     required
                 >
                     {categoryOptionLists[0]?.map(categoryList => (
-                        <MenuItem value={categoryList.categoryId} >{categoryList.name}</MenuItem>
+                        <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -86,7 +86,7 @@ const CategorySelection = (
                     }}
                 >
                     {categoryOptionLists[1]?.map(categoryList => (
-                        <MenuItem value={categoryList.categoryId} >{categoryList.name}</MenuItem>
+                        <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -102,7 +102,7 @@ const CategorySelection = (
                     }}
                 >
                     {categoryOptionLists[2]?.map(categoryList => (
-                        <MenuItem value={categoryList.categoryId} >{categoryList.name}</MenuItem>
+                        <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
