@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { ErrorMessage, webAPIUrl } from "./Settings";
 
-type UserRole = 'customer' | 'admin';
+type UserRole = 'Customer' | 'Admin';
 type UserMembershipStatus = 'active' | 'pastDue' | 'canceled';
 
 export type UserInfo = {
