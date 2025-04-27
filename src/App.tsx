@@ -20,6 +20,7 @@ import AdminProductDetailPage from './Pages/Admin/Products/ProductDetail/AdminPr
 import AdminProductAddPage from './Pages/Admin/Products/New/AdminProductAddPage';
 import { getStore } from './Data/GlobalState/Store';
 import { Provider } from 'react-redux';
+import NotFoundPage from './Pages/NotFoundPage';
 
 const store = getStore();
 function App() {
@@ -51,6 +52,7 @@ function App() {
                 <Route path='new' element={<AdminProductAddPage />} />
               </Route>
             </Route>
+            <Route path='*' element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </Provider>
