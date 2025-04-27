@@ -80,12 +80,26 @@ export const getProduct = async (productId: number): Promise<Product | ErrorMess
 
 export const addProduct = async (request: ProductAddRequest, token: string): Promise<{productId: number} | ErrorMessage> => {
     try{
+        const formData = new FormData();
+        formData.append('name', request.name);
+        formData.append('price', request.price.toString());
+        formData.append('priceUnitType', request.priceUnitType);
+        if(request.description){
+            formData.append('description', request.description);
+        }
+        if(request.images){
+            request.images.forEach(image => formData.append('images', image));
+        }
+        formData.append('quantity', request.quantity.toString());
+        request.categories.forEach(category => formData.append('categories', category.toString()));
+
         const response = await axios.post(
             `${webAPIUrl}/products`,
-            request,
+            formData,
             {
                 headers:{
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
                 }
             }
         );
