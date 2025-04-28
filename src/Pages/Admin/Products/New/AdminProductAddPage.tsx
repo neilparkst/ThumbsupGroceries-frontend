@@ -11,6 +11,8 @@ import { addProduct, ProductAddRequest } from '../../../../Data/ProductData';
 import NotFoundPage from '../../../NotFoundPage';
 import { isErrorMessage } from '../../../../Data/Util';
 import { ErrorMessage } from '../../../../Data/Settings';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminProductAddPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
@@ -23,15 +25,15 @@ const AdminProductAddPage = () => {
     const onSubmit = async (data: any) => {
         const formData = data as ProductAddRequest;
         formData.categories = formData.categories.filter(category => (category as (number | '')) !== '')
-    
+
         if(token){
             const response = await addProduct(formData, token);
             if(isErrorMessage(response)){
-                alert((response as ErrorMessage).errorMessage);
+                toast.error((response as ErrorMessage).errorMessage);
                 return;
             }
 
-            alert("product added succesfully");
+            toast.success("product added succesfully");
             reset();
         } else{
             console.log("token doesn't exist");
@@ -157,6 +159,7 @@ const AdminProductAddPage = () => {
                     </Button>
                 </Box>
             </Card>
+            <ToastContainer />
         </div>
     );
 };
