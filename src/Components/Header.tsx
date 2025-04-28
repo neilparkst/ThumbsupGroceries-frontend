@@ -11,6 +11,8 @@ import { isErrorMessage } from '../Data/Util';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../Data/GlobalState/Store';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { ErrorMessage } from '../Data/Settings';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -119,48 +121,32 @@ const MenuContent = ({
     const userRole = useSelector((state: GlobalState) => state.user.info?.role);
     
     const [ selectedCategories, setSelectedCategories ] = useState<number[]>([]);
-    const [ categoryOptionLists, setCategoryOptionLists ] = useState<(CategoryTree | null)[]>([null, null, null]);
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
-    const selectedCategoryId1 = selectedCategories[0];
-    const selectedCategoryId2 = selectedCategories[1];
-    
-    useEffect(() => {
-        const getCategories = async () => {
+    const selectedCategoryIds = [selectedCategories[0], selectedCategories[1]];
+
+    const { data: categoryTree } = useQuery({
+        queryKey: ['categoryTree'],
+        queryFn: async () => {
             const response = await getCategoryTree();
             if(isErrorMessage(response)){
-                return;
+                throw new Error((response as ErrorMessage).errorMessage);
             }
-            
-            const newCategoryTree = response as CategoryTree;
-            setCategoryOptionLists([
-                newCategoryTree,
-                null,
-                null
-            ])
+
+            return response as CategoryTree;
         }
+    })
 
-        getCategories();
-    }, [])
-
-    useEffect(() => {
-        setCategoryOptionLists(prev => ([
-            prev[0],
-            prev[0]?.find(categoryItem => categoryItem.categoryId === selectedCategoryId1)?.children ?? null,
-            null
-        ]))
-    }, [selectedCategoryId1])
-
-    useEffect(() => {
-        setCategoryOptionLists(prev => ([
-            prev[0],
-            prev[1],
-            prev[1]?.find(categoryItem => categoryItem.categoryId === selectedCategoryId2)?.children ?? null
-        ]))
-    }, [selectedCategoryId2])
+    let categoryTreeLevels = [categoryTree];
+    for(let i = 1; i <= 2; i++){
+        const newTreeLevel = categoryTreeLevels[i-1]?.find(categoryItem => categoryItem.categoryId === selectedCategoryIds[i-1])?.children;
+        if(newTreeLevel){
+            categoryTreeLevels.push(newTreeLevel);
+        }
+    }
 
     let menuContent = <></>;
     if(contentType === 'categories'){
-        const currentCategory = categoryOptionLists[currentCategoryLevel - 1]?.find(categoryItem => categoryItem.categoryId === selectedCategories[currentCategoryLevel - 1]);
+        const currentCategory = categoryTreeLevels[currentCategoryLevel - 1]?.find(categoryItem => categoryItem.categoryId === selectedCategories[currentCategoryLevel - 1]);
 
         menuContent = (<>
             {currentCategoryLevel > 0 &&<>
@@ -182,7 +168,7 @@ const MenuContent = ({
                 </MenuItem>
             </>}
             {currentCategoryLevel < 2 ? 
-                (categoryOptionLists[currentCategoryLevel]?.map(categoryItem => (
+                (categoryTreeLevels[currentCategoryLevel]?.map(categoryItem => (
                     <MenuItem
                         onClick={() => {
                             setSelectedCategories(prev => [...prev, categoryItem.categoryId]);
@@ -193,10 +179,14 @@ const MenuContent = ({
                     </MenuItem>)
                 ))
                 : 
-                (categoryOptionLists[currentCategoryLevel]?.map(categoryItem => (
+                (categoryTreeLevels[currentCategoryLevel]?.map(categoryItem => (
                     <MenuItem onClick={() => {
                         navigate(`/products/categories/${categoryItem.categoryId}`);
                         handleClose();
+                        setTimeout(() => {
+                            setSelectedCategories([]);
+                            setCurrentCategoryLevel(0);
+                        }, 500);
                     }}>
                         {categoryItem.name}
                     </MenuItem>)
