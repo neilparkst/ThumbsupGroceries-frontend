@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './CategorySelection.scss';
 import { CategoryTree, getCategoryTree } from '../../../../Data/ProductData';
 import { isErrorMessage } from '../../../../Data/Util';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { ErrorMessage } from '../../../../Data/Settings';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CategorySelection = (
     {
@@ -17,43 +21,24 @@ const CategorySelection = (
     const selectedCategoryId2 = selectedCategories[1];
     const selectedCategoryId3 = selectedCategories[2];
 
-    const [ categoryOptionLists, setCategoryOptionLists ] = useState<(CategoryTree | null)[]>([null, null, null]);
-
-    useEffect(() => {
-        const getCategories = async () => {
+    const { data: categoryTree, isError } = useQuery({
+        queryKey: ['categoryTree'],
+        queryFn: async () => {
             const response = await getCategoryTree();
             if(isErrorMessage(response)){
-                alert('Error occurred during getting category tree!');
-                return;
+                throw new Error((response as ErrorMessage).errorMessage);
             }
-            
-            const newCategoryTree = response as CategoryTree;
-            setCategoryOptionLists([
-                newCategoryTree,
-                null,
-                null
-            ])
+
+            return response as CategoryTree;
         }
+    })
+    const categoryTreeLevel1 = categoryTree;
+    const categoryTreeLevel2 = categoryTreeLevel1?.find(categoryItem => categoryItem.categoryId === selectedCategoryId1)?.children
+    const categoryTreeLevel3 = categoryTreeLevel2?.find(categoryItem => categoryItem.categoryId === selectedCategoryId2)?.children
 
-        getCategories();
-    }, [])
-
-    useEffect(() => {
-        setCategoryOptionLists(prev => ([
-            prev[0],
-            prev[0]?.find(categoryItem => categoryItem.categoryId === selectedCategoryId1)?.children ?? null,
-            null
-        ]))
-    }, [selectedCategoryId1])
-
-    useEffect(() => {
-        setCategoryOptionLists(prev => ([
-            prev[0],
-            prev[1],
-            prev[1]?.find(categoryItem => categoryItem.categoryId === selectedCategoryId2)?.children ?? null
-        ]))
-    }, [selectedCategoryId2])
-
+    if(isError){
+        toast.error("Error occurred while getting category tree!");
+    }
 
     return (
         <div className='CategorySelection'>
@@ -69,7 +54,7 @@ const CategorySelection = (
                     }}
                     required
                 >
-                    {categoryOptionLists[0]?.map(categoryList => (
+                    {categoryTreeLevel1?.map(categoryList => (
                         <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
@@ -85,7 +70,7 @@ const CategorySelection = (
                         onSelectedCategoriesChange([selectedCategoryId1, Number.parseFloat(event.target.value), ''])
                     }}
                 >
-                    {categoryOptionLists[1]?.map(categoryList => (
+                    {categoryTreeLevel2?.map(categoryList => (
                         <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
@@ -101,11 +86,12 @@ const CategorySelection = (
                         onSelectedCategoriesChange([selectedCategoryId1, selectedCategoryId2, Number.parseFloat(event.target.value)])
                     }}
                 >
-                    {categoryOptionLists[2]?.map(categoryList => (
+                    {categoryTreeLevel3?.map(categoryList => (
                         <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
+            <ToastContainer />
         </div>
     );
 };
