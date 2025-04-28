@@ -34,7 +34,7 @@ const AdminProductAddPage = () => {
             }
 
             toast.success("product added succesfully");
-            reset();
+            reset({priceUnitType: 'ea'});
         } else{
             console.log("token doesn't exist");
         }
