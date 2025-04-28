@@ -37,7 +37,7 @@ type ProductUpdateRequest = {
     categories?: number[]
 };
 
-type ProductSimple = {
+export type ProductSimple = {
     productId: number,
     name: string,
     price: number,
