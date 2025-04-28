@@ -17,9 +17,7 @@ const CategorySelection = (
         onSelectedCategoriesChange: (newSelectedCategories: (number | '')[]) => void
     }
 ) => {
-    const selectedCategoryId1 = selectedCategories[0];
-    const selectedCategoryId2 = selectedCategories[1];
-    const selectedCategoryId3 = selectedCategories[2];
+    const selectedCategoryIds = [selectedCategories[0], selectedCategories[1], selectedCategories[2]];
 
     const { data: categoryTree, isError } = useQuery({
         queryKey: ['categoryTree'],
@@ -32,9 +30,13 @@ const CategorySelection = (
             return response as CategoryTree;
         }
     })
-    const categoryTreeLevel1 = categoryTree;
-    const categoryTreeLevel2 = categoryTreeLevel1?.find(categoryItem => categoryItem.categoryId === selectedCategoryId1)?.children
-    const categoryTreeLevel3 = categoryTreeLevel2?.find(categoryItem => categoryItem.categoryId === selectedCategoryId2)?.children
+    let categoryTreeLevels = [categoryTree];
+    for(let i = 1; i <= 2; i++){
+        const newTreeLevel = categoryTreeLevels[i-1]?.find(categoryItem => categoryItem.categoryId === selectedCategoryIds[i-1])?.children;
+        if(newTreeLevel){
+            categoryTreeLevels.push(newTreeLevel);
+        }
+    }
 
     if(isError){
         toast.error("Error occurred while getting category tree!");
@@ -47,14 +49,14 @@ const CategorySelection = (
                 <Select
                     labelId="category1"
                     id="category-selection1"
-                    value={selectedCategoryId1.toString()}
+                    value={selectedCategoryIds[0].toString()}
                     label="Category1"
                     onChange={(event: SelectChangeEvent) => {
                         onSelectedCategoriesChange([Number.parseFloat(event.target.value), '', ''])
                     }}
                     required
                 >
-                    {categoryTreeLevel1?.map(categoryList => (
+                    {categoryTreeLevels[0]?.map(categoryList => (
                         <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
@@ -64,13 +66,13 @@ const CategorySelection = (
                 <Select
                     labelId="category2"
                     id="category-selection2"
-                    value={selectedCategoryId2.toString()}
+                    value={selectedCategoryIds[1].toString()}
                     label="Category2"
                     onChange={(event: SelectChangeEvent) => {
-                        onSelectedCategoriesChange([selectedCategoryId1, Number.parseFloat(event.target.value), ''])
+                        onSelectedCategoriesChange([selectedCategoryIds[0], Number.parseFloat(event.target.value), ''])
                     }}
                 >
-                    {categoryTreeLevel2?.map(categoryList => (
+                    {categoryTreeLevels[1]?.map(categoryList => (
                         <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
@@ -80,13 +82,13 @@ const CategorySelection = (
                 <Select
                     labelId="category3"
                     id="category-selection3"
-                    value={selectedCategoryId3.toString()}
+                    value={selectedCategoryIds[2].toString()}
                     label="Category3"
                     onChange={(event: SelectChangeEvent) => {
-                        onSelectedCategoriesChange([selectedCategoryId1, selectedCategoryId2, Number.parseFloat(event.target.value)])
+                        onSelectedCategoriesChange([selectedCategoryIds[0], selectedCategoryIds[1], Number.parseFloat(event.target.value)])
                     }}
                 >
-                    {categoryTreeLevel3?.map(categoryList => (
+                    {categoryTreeLevels[2]?.map(categoryList => (
                         <MenuItem key={categoryList.categoryId} value={categoryList.categoryId} >{categoryList.name}</MenuItem>
                     ))}
                 </Select>
