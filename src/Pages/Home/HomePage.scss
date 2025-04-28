@@ -1,0 +1,73 @@
+.Homepage {
+    .MembershipIntroduction {
+        padding: 20px;
+        background-color: #f9f9f9;
+
+        .Title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .MembershipIntroductionCardContainer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 80%;
+            margin: 0px auto 30px auto;
+        }
+
+        .MembershipIntroductionCard {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+
+            .Icon {
+                font-size: 48px;
+                color: #1976d2;
+                margin-bottom: 15px;
+            }
+
+            .Title {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .Description {
+                font-size: 16px;
+                color: #777;
+                line-height: 1.6;
+            }
+        }
+
+        .MembershipPageButton {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+
+            a {
+                text-decoration: none;
+            }
+
+            Button {
+                padding: 12px 20px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #1976d2;
+                color: #fff;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: #0d7ded;
+                }
+            }
+        }
+    }
+}
