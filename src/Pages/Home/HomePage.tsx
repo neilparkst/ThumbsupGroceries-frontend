@@ -1,20 +1,24 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import './HomePage.scss';
 import { getProducts, ProductSimple } from '../../Data/ProductData';
 import ProductCard from '../../Components/ProductCard';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import Filter1Icon from '@mui/icons-material/Filter1';
-import { Button } from '@mui/material';
+import { Button, MobileStepper } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { isErrorMessage } from '../../Data/Util';
+import { ErrorMessage } from '../../Data/Settings';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 const HomePage = () => {
     
 
     return (
         <div className="Homepage">
-            <div className="ProductCarousel">
-
+            <div className="ProductCarouselContainer">
+                <ProductCarousel />
             </div>
             <div className="MembershipIntroduction">
                 <div className="Title">
@@ -38,6 +42,96 @@ const HomePage = () => {
         </div>
     );
 };
+
+const ITEM_WIDTH = 228 + 20;
+const ProductCarousel = () => {
+    const {data: products} = useQuery({
+        queryKey: ['products', {categoryId: undefined, sort: 'relevance', search: '', page: 1, pageSize: 24}],
+        queryFn: async () => {
+            const response = await getProducts();
+            if(isErrorMessage(response)){
+                throw new Error((response as ErrorMessage).errorMessage);
+            }
+
+            return response as ProductSimple[];
+        }
+    })
+
+    const carouselTrackRef = useRef<HTMLDivElement | null>(null);
+    const [pageNumber, setPageNumber] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(1);
+
+    useEffect(() => {
+        // measure carousel track width and calculate the number of items
+        const updateItemsPerPage = () => {
+            if (carouselTrackRef.current) {
+                const containerWidth = carouselTrackRef.current.offsetWidth;
+                const itemNumber = Math.floor(containerWidth / ITEM_WIDTH);
+                setItemsPerPage(itemNumber || 1); // minimum 1
+            }
+        };
+
+        updateItemsPerPage();
+        window.addEventListener("resize", updateItemsPerPage);
+        return () => window.removeEventListener("resize", updateItemsPerPage);
+    }, []);
+
+    if(!products){
+        return null;
+    }
+
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+
+    const scrollToPage = (page: number) => {
+        if (carouselTrackRef.current) {
+            carouselTrackRef.current.scrollTo({
+                left: page * itemsPerPage * ITEM_WIDTH,
+                behavior: "smooth",
+            });
+            setPageNumber(page);
+        }
+    };
+
+    const nextPage = () => {
+        if (pageNumber < totalPages - 1) {
+            scrollToPage(pageNumber + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (pageNumber > 0) {
+            scrollToPage(pageNumber - 1);
+        }
+    };
+
+    return (
+        <div className="ProductCarousel">
+            <div ref={carouselTrackRef} className="ProductCarouselTrack">
+                {products.map(product => (
+                    <ProductCard key={product.productId} product={product} />
+                ))}
+            </div>
+            <MobileStepper
+                variant="dots"
+                steps={totalPages}
+                position="static"
+                activeStep={pageNumber}
+                nextButton={
+                    <Button size="small" onClick={nextPage} disabled={pageNumber >= totalPages - 1}>
+                        Next
+                        <KeyboardArrowRight />
+                    </Button>
+                }
+                backButton={
+                    <Button size="small" onClick={prevPage} disabled={pageNumber === 0}>
+                        <KeyboardArrowLeft />
+                        Back
+                    </Button>
+                }
+            />
+        </div>
+    );
+}
 
 const MembershipIntroductionCardContentList = [
     {
