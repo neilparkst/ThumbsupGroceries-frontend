@@ -74,7 +74,7 @@ const ProductCarousel = () => {
         updateItemsPerPage();
         window.addEventListener("resize", updateItemsPerPage);
         return () => window.removeEventListener("resize", updateItemsPerPage);
-    }, []);
+    }, [products?.length]);
 
     if(!products){
         return null;
