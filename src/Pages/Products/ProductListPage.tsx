@@ -165,9 +165,14 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
                 <div style={{height: 20}}></div>
                 {currentCategoryLevel > 0 &&<>
                     <ListItem
+                        disablePadding
                         onClick={() =>{
                             setSelectedCategories(prev => prev.slice(0, -1));
                             setCurrentCategoryLevel(prev => prev - 1);
+                        }}
+                        className='Item'
+                        style={{
+                            textDecorationColor: '#1976d2'
                         }}
                     >
                         <ListItemIcon sx={{minWidth: 40, color: '#1976d2'}}>
@@ -184,8 +189,13 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
                         />
                     </ListItem>
                     <ListItem
+                        disablePadding
                         onClick={() => {
                             navigate(`/products/categories/${currentCategory?.categoryId}`);
+                        }}
+                        className='Item'
+                        style={{
+                            textDecorationColor: '#63a4ff'
                         }}
                     >
                         <ListItemText 
@@ -198,7 +208,6 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
                             }}
                         />
                     </ListItem>
-                    <Divider />
                 </>}
                 {categoryTreeLevels[currentCategoryLevel]?.map(categoryItem => (
                     <ListItem
