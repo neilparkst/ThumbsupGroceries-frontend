@@ -37,7 +37,7 @@ const ProductCard = ({product}: {product: ProductSimple}) => {
                     />
                     <span className='ReviewCount'>({reviewCount})</span>
                 </div>
-                <div className='PriceContainer'>{`$${price} / ${priceUnitType}`}</div>
+                <div className='PriceContainer'>{`$${price.toFixed(2)} / ${priceUnitType}`}</div>
             </div>
             <div className='TrolleyContainer'>
                 <div className="TrolleyQuantityContainer">
