@@ -89,11 +89,10 @@ const ProductListPage = () => {
                     </Box>
                     <div className="SortContainer">
                         <span>Sort By</span>
-                        <FormControl fullWidth>
+                        <FormControl size='small'>
                             <Select
                                 id="sortMethod-selection"
                                 value={sort || 'relevance'}
-                                label="Sort by"
                                 onChange={(event: SelectChangeEvent) => {
                                     const newSort = event.target.value;
                                     let currentUrl = new URL(window.location.href);

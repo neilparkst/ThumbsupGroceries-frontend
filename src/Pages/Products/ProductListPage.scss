@@ -1,19 +1,87 @@
-.ProductListPage{
-    .CategoryListContainer{
-        width: 300px;
+.ProductListPage {
+    display: flex;
+    min-height: 100vh;
+
+    .CategoryListContainer {
+        width: 200px;
+        border-right: 1px solid #ddd;
         padding: 120px 20px 20px 20px;
 
-        .CategoryList{
-            font-size: 24px;
-            padding: 20px 0px 20px 10px;
+        .CategoryList {
+            font-size: 20px;
+            font-weight: 600;
+            color: #444;
+            padding: 20px 0 20px 10px;
 
-            .Item{
+            .Item {
+                padding: 10px 0;
                 color: #333;
+                transition: all 0.2s ease;
 
-                &:hover{
+                &:hover {
                     text-decoration: underline;
                     cursor: pointer;
                 }
+            }
+        }
+    }
+
+    .ProductListContainer {
+        flex: 1;
+        padding: 120px 80px 20px 40px;
+
+        .CategoryName {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .SearchAndSort {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+
+            .SearchBar {
+                width: 220px;
+                border: 1px solid #1976d2;
+                border-radius: 5px;
+                padding: 6px 10px;
+                font-size: 14px;
+
+                &:focus {
+                    outline: none;
+                    border-color: #1565c0;
+                    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+                }
+            }
+
+            .SortContainer {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                span{
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .ProductList {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .ProductCardContainer {
+                flex: 1;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .Pagination {
+                margin-top: 30px;
+                align-self: center;
             }
         }
     }
