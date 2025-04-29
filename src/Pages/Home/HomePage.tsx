@@ -46,7 +46,7 @@ const HomePage = () => {
 const ITEM_WIDTH = 228 + 20;
 const ProductCarousel = () => {
     const {data: products} = useQuery({
-        queryKey: ['products', {categoryId: undefined, sort: 'relevance', search: '', page: 1, pageSize: 24}],
+        queryKey: ['products', {categoryId: undefined, sort: 'relevance', search: undefined, page: 1, pageSize: 24}],
         queryFn: async () => {
             const response = await getProducts();
             if(isErrorMessage(response)){
