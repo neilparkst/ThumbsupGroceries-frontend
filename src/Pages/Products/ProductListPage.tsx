@@ -1,23 +1,47 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './ProductListPage.scss';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CategoryTree, getCategoryTree } from '../../Data/ProductData';
 import { Box, Divider, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { getCategoryNameById, getTreePath } from '../../Data/Util';
 
 const ProductListPage = () => {
     const params = useParams();
     const categoryId = parseInt(params.categoryId || '0');
 
+    const { data: categoryTree } = useQuery({
+        queryKey: ['categoryTree'],
+        queryFn: async () => {
+            const response = await getCategoryTree();
+            if('errorMessage' in response){
+                throw new Error(response.errorMessage);
+            }
+            return response as CategoryTree;
+        }
+    })
+    const categoryTreeLengthRef = useRef(0);
+
+    const categoryName = useMemo(() => {
+        if((categoryTree?.length || 0 ) === categoryTreeLengthRef.current){
+            return;
+        }
+        return getCategoryNameById(categoryTree, categoryId);
+    }, [categoryId, categoryTree])
+
     return (
         <div className='ProductListPage'>
             <div className="CategoryListContainer">
-                <CategoryList initialCategoryId={categoryId} />
+                <CategoryList
+                    key={categoryId}
+                    categoryTree={categoryTree}
+                    initialCategoryId={categoryId}
+                />
             </div>
             <div className="ProductListContainer">
                 <div className="CategoryName">
-
+                    {categoryName}
                 </div>
                 <div className="SearchAndSort">
 
@@ -35,47 +59,15 @@ const ProductListPage = () => {
     );
 };
 
-const getTreePath = (tree: CategoryTree | undefined, id: number): number[] => {
-    if(!tree){
-        return [];
-    }
-    let path: number[] = [];
-    for(let i = 0; i < tree.length; i++){
-        let currentRoot = tree[i];
-        path.push(currentRoot.categoryId);
-        if(currentRoot.categoryId === id){
-            return path;
-        }
-        const nextPaths = getTreePath(currentRoot.children, id);
-        if(nextPaths.length > 0){
-            path = path.concat(nextPaths);
-            break;
-        }
-        path.pop();
-    }
-    return path;
-}
-
-const CategoryList = ({initialCategoryId} : {initialCategoryId: number}) => {
+const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: CategoryTree | undefined, initialCategoryId: number}) => {
     const navigate = useNavigate();
-    
-    const { data: categoryTree } = useQuery({
-        queryKey: ['categoryTree'],
-        queryFn: async () => {
-            const response = await getCategoryTree();
-            if('errorMessage' in response){
-                throw new Error(response.errorMessage);
-            }
-            return response as CategoryTree;
-        }
-    })
 
     const [ selectedCategories, setSelectedCategories ] = useState<number[]>([]);
     const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
-    const categoryTreeLength = useRef(0);
+    const categoryTreeLengthRef = useRef(0);
     
     useEffect(() => {
-        if((categoryTree?.length || 0 ) === categoryTreeLength.current){
+        if((categoryTree?.length || 0 ) === categoryTreeLengthRef.current){
             return;
         }
         const path = getTreePath(categoryTree, initialCategoryId);
