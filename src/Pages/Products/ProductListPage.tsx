@@ -139,7 +139,7 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
         }
         const path = getTreePath(categoryTree, initialCategoryId);
         setSelectedCategories(path);
-        setCurrentCategoryLevel(Math.max(Math.min(path.length - 1, 2), 0));
+        setCurrentCategoryLevel(Math.min(path.length, 2));
     }, [categoryTree, initialCategoryId])
 
     if(!categoryTree){
