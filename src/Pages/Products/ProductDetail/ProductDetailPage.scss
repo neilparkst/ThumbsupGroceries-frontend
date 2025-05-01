@@ -1,0 +1,168 @@
+.ProductDetailPage {
+    padding: 32px;
+    margin: 0 auto;
+    color: #333;
+    max-width: 1200px;
+
+    .MainSection {
+        display: flex;
+        gap: 64px;
+        flex-wrap: wrap;
+
+        .ImageContainer {
+            flex: 1;
+            max-width: 500px;
+
+            .SelectedImage {
+                img {
+                    width: 100%;
+                    aspect-ratio: 1 / 1;
+                    background-color: #f9f9f9;
+                    border: 1px solid #ddd;
+                    object-fit: contain;
+                }
+            }
+
+            .ImageList {
+                display: flex;
+                gap: 8px;
+                margin-top: 16px;
+                overflow-x: auto;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    object-fit: cover;
+                    border: 1px solid #ccc;
+                    box-sizing: border-box;
+                    cursor: pointer;
+                    border-radius: 4px;
+                }
+
+                .Selected {
+                    border: 2px solid #1976d2;
+                }
+            }
+        }
+
+        .ProductDescription {
+            flex: 1;
+            min-width: 300px;
+
+            .Title {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 16px;
+            }
+
+            .RatingPriceContainer {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 16px;
+
+                .RatingContainer {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .PriceContainer {
+                    text-align: left;
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+            }
+
+            .TrolleyContainer {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+
+                .TrolleyButton {
+                    height: 40px;
+                }
+
+                .PopperContent {
+                    background-color: #333;
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                    margin-bottom: 8px;
+
+                    a {
+                        color: #ffeb3b;
+                        text-decoration: underline;
+                        margin-left: 6px;
+
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+
+            .Description {
+                margin-top: 32px;
+                line-height: 1.6;
+                font-size: 16px;
+            }
+        }
+    }
+
+    .ReviewContainer {
+        margin-top: 64px;
+
+        .ReviewInput {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ReviewList {
+            margin-top: 32px;
+
+            .Review {
+                border-top: 1px solid #ddd;
+                padding: 16px 0;
+
+                .ReviewHeader {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .MetaData {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        font-size: 14px;
+                        color: #555;
+
+                        .UserName {
+                            font-weight: bold;
+                        }
+
+                        .Date {
+                            color: #888;
+                        }
+                    }
+
+                    .Buttons {
+                        button {
+                            background: none;
+                            border: none;
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                .Content {
+                    margin-top: 8px;
+                    line-height: 1.4;
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+}

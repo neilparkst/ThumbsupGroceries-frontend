@@ -3,7 +3,7 @@ import { ErrorMessage, webAPIUrl } from "./Settings";
 
 type PriceUnitType = 'ea' | 'kg';
 
-type Product = {
+export type Product = {
     productId: number,
     name: string,
     price: number,
@@ -53,8 +53,9 @@ export type CategoryTree = {
     children: CategoryTree
 }[];
 
-type Review = {
+export type ReviewType = {
     reviewId: number,
+    userId: string,
     userName: string,
     comment: string,
     rating: number,
@@ -169,7 +170,7 @@ export const getCategoryTree = async (): Promise<CategoryTree | ErrorMessage> =>
     }
 }
 
-export const getReviews = async (productId: number, page: number = 1, pageSize: number = 5): Promise<Review[] | ErrorMessage> => {
+export const getReviews = async (productId: number, page: number = 1, pageSize: number = 5): Promise<ReviewType[] | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/products/${productId}/reviews?page=${page}&pageSize=${pageSize}`);
 
