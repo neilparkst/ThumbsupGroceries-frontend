@@ -2,9 +2,7 @@ import React, { useRef, useState } from 'react';
 import './Styles/ProductCard.scss';
 import { ProductSimple } from '../Data/ProductData';
 import { domain } from '../Data/Settings';
-import { Button, IconButton, Popper, Rating, TextField } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import { Button, Popper, Rating, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({product}: {product: ProductSimple}) => {
@@ -18,7 +16,10 @@ const ProductCard = ({product}: {product: ProductSimple}) => {
         <div className='ProductCard'>
             <div className='ImageContainer'>
                 <Link to={`/products/${productId}`}>
-                    <img src={`${domain}${image}`} alt="product-image" />
+                    {image ?
+                        <img src={`${domain}${image}`} alt="product-image" />:
+                        <img src="/no_image.avif" alt="no img" />
+                    }
                 </Link>
             </div>
             <div className='NameContainer'>
