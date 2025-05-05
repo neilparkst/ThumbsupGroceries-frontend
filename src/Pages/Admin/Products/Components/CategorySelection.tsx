@@ -17,8 +17,6 @@ const CategorySelection = (
         onSelectedCategoriesChange: (newSelectedCategories: (number | '')[]) => void
     }
 ) => {
-    const selectedCategoryIds = [selectedCategories[0], selectedCategories[1], selectedCategories[2]];
-
     const { data: categoryTree, isError } = useQuery({
         queryKey: ['categoryTree'],
         queryFn: async () => {
@@ -30,9 +28,10 @@ const CategorySelection = (
             return response as CategoryTree;
         }
     })
+
     let categoryTreeLevels = [categoryTree];
     for(let i = 1; i <= 2; i++){
-        const newTreeLevel = categoryTreeLevels[i-1]?.find(categoryItem => categoryItem.categoryId === selectedCategoryIds[i-1])?.children;
+        const newTreeLevel = categoryTreeLevels[i-1]?.find(categoryItem => categoryItem.categoryId === selectedCategories[i-1])?.children;
         if(newTreeLevel){
             categoryTreeLevels.push(newTreeLevel);
         }
@@ -49,7 +48,7 @@ const CategorySelection = (
                 <Select
                     labelId="category1"
                     id="category-selection1"
-                    value={selectedCategoryIds[0].toString()}
+                    value={selectedCategories[0].toString()}
                     label="Category1"
                     onChange={(event: SelectChangeEvent) => {
                         onSelectedCategoriesChange([Number.parseFloat(event.target.value), '', ''])
@@ -66,10 +65,10 @@ const CategorySelection = (
                 <Select
                     labelId="category2"
                     id="category-selection2"
-                    value={selectedCategoryIds[1].toString()}
+                    value={selectedCategories[1].toString()}
                     label="Category2"
                     onChange={(event: SelectChangeEvent) => {
-                        onSelectedCategoriesChange([selectedCategoryIds[0], Number.parseFloat(event.target.value), ''])
+                        onSelectedCategoriesChange([selectedCategories[0], Number.parseFloat(event.target.value), ''])
                     }}
                 >
                     {categoryTreeLevels[1]?.map(categoryList => (
@@ -82,10 +81,10 @@ const CategorySelection = (
                 <Select
                     labelId="category3"
                     id="category-selection3"
-                    value={selectedCategoryIds[2].toString()}
+                    value={selectedCategories[2].toString()}
                     label="Category3"
                     onChange={(event: SelectChangeEvent) => {
-                        onSelectedCategoriesChange([selectedCategoryIds[0], selectedCategoryIds[1], Number.parseFloat(event.target.value)])
+                        onSelectedCategoriesChange([selectedCategories[0], selectedCategories[1], Number.parseFloat(event.target.value)])
                     }}
                 >
                     {categoryTreeLevels[2]?.map(categoryList => (
