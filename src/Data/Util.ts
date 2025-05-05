@@ -1,9 +1,4 @@
 import { CategoryTree } from "./ProductData";
-import { ErrorMessage } from "./Settings"
-
-export const isErrorMessage = (obj: ErrorMessage | any) => {
-    return (obj as ErrorMessage).errorMessage !== undefined;
-}
 
 export const getTreePath = (tree: CategoryTree | undefined, id: number): number[] => {
     if(!tree || tree.length === 0){

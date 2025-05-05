@@ -8,13 +8,9 @@ import Filter1Icon from '@mui/icons-material/Filter1';
 import { Button, MobileStepper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { isErrorMessage } from '../../Data/Util';
-import { ErrorMessage } from '../../Data/Settings';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 const HomePage = () => {
-    
-
     return (
         <div className="Homepage">
             <div className="ProductCarouselContainer">
@@ -49,8 +45,8 @@ const ProductCarousel = () => {
         queryKey: ['products', {categoryId: undefined, sort: 'relevance', search: undefined, page: 1, pageSize: 24}],
         queryFn: async () => {
             const response = await getProducts();
-            if(isErrorMessage(response)){
-                throw new Error((response as ErrorMessage).errorMessage);
+            if('errorMessage' in response){
+                throw new Error(response.errorMessage);
             }
 
             return response as ProductSimple[];

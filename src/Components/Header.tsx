@@ -7,12 +7,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Box, IconButton, InputAdornment, Menu, MenuItem, TextField } from '@mui/material';
 import { CategoryTree, getCategoryTree } from '../Data/ProductData';
-import { isErrorMessage } from '../Data/Util';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../Data/GlobalState/Store';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ErrorMessage } from '../Data/Settings';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -126,8 +124,8 @@ const MenuContent = ({
         queryKey: ['categoryTree'],
         queryFn: async () => {
             const response = await getCategoryTree();
-            if(isErrorMessage(response)){
-                throw new Error((response as ErrorMessage).errorMessage);
+            if('errorMessage' in response){
+                throw new Error(response.errorMessage);
             }
 
             return response as CategoryTree;

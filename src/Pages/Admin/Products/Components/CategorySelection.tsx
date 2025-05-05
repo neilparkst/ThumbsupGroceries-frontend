@@ -1,10 +1,8 @@
 import React from 'react';
 import './CategorySelection.scss';
 import { CategoryTree, getCategoryTree } from '../../../../Data/ProductData';
-import { isErrorMessage } from '../../../../Data/Util';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { ErrorMessage } from '../../../../Data/Settings';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,8 +19,8 @@ const CategorySelection = (
         queryKey: ['categoryTree'],
         queryFn: async () => {
             const response = await getCategoryTree();
-            if(isErrorMessage(response)){
-                throw new Error((response as ErrorMessage).errorMessage);
+            if('errorMessage' in response){
+                throw new Error(response.errorMessage);
             }
 
             return response as CategoryTree;

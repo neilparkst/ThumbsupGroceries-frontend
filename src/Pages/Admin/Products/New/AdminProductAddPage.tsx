@@ -9,8 +9,6 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '../../../../Data/GlobalState/Store';
 import { addProduct, ProductAddRequest } from '../../../../Data/ProductData';
 import NotFoundPage from '../../../NotFoundPage';
-import { isErrorMessage } from '../../../../Data/Util';
-import { ErrorMessage } from '../../../../Data/Settings';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -28,8 +26,8 @@ const AdminProductAddPage = () => {
 
         if(token){
             const response = await addProduct(formData, token);
-            if(isErrorMessage(response)){
-                toast.error((response as ErrorMessage).errorMessage);
+            if('errorMessage' in response){
+                toast.error(response.errorMessage);
                 return;
             }
 

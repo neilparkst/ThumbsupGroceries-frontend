@@ -5,8 +5,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Card from '../../Components/Card';
 import { signUp, SignUpResponse } from '../../Data/AuthData';
-import { isErrorMessage } from '../../Data/Util';
-import { ErrorMessage } from '../../Data/Settings';
 
 const SignUpPage = () => {
     const navigate = useNavigate();
@@ -15,8 +13,8 @@ const SignUpPage = () => {
 
     const onSubmit = async (formData: any) => {
         const response = await signUp(formData);
-        if(isErrorMessage(response)){
-            alert((response as ErrorMessage).errorMessage);
+        if('errorMessage' in response){
+            alert(response.errorMessage);
             return;
         }
 

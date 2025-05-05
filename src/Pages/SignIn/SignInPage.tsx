@@ -5,8 +5,6 @@ import { Button, TextField } from '@mui/material';
 
 import './SignInPage.scss';
 import { signIn, SignInResponse } from '../../Data/AuthData';
-import { isErrorMessage } from '../../Data/Util';
-import { ErrorMessage } from '../../Data/Settings';
 import { useDispatch } from 'react-redux';
 import { registerTokenAndUserInfo } from '../../Data/GlobalState/UserSlice';
 
@@ -24,8 +22,8 @@ const SignInPage = () => {
         e.preventDefault();
         
         const response = await signIn({email, password});
-        if(isErrorMessage(response)){
-            alert((response as ErrorMessage).errorMessage);
+        if('errorMessage' in response){
+            alert(response.errorMessage);
             return;
         }
 
