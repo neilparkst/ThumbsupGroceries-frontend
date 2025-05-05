@@ -30,6 +30,7 @@ const SignInPage = () => {
 
         const token = (response as SignInResponse).token;
         dispatch(registerTokenAndUserInfo(token));
+        sessionStorage.setItem("token", token);
 
         navigate('/' + (redirectTo ? redirectTo : ''));
     }
