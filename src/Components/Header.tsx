@@ -121,8 +121,6 @@ const MenuContent = ({
     const userRole = useSelector((state: GlobalState) => state.user.info?.role);
     
     const [ selectedCategories, setSelectedCategories ] = useState<number[]>([]);
-    const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
-    const selectedCategoryIds = [selectedCategories[0], selectedCategories[1]];
 
     const { data: categoryTree } = useQuery({
         queryKey: ['categoryTree'],
@@ -136,9 +134,11 @@ const MenuContent = ({
         }
     })
 
+    const currentCategoryLevel = selectedCategories.length;
+
     let categoryTreeLevels = [categoryTree];
     for(let i = 1; i <= 2; i++){
-        const newTreeLevel = categoryTreeLevels[i-1]?.find(categoryItem => categoryItem.categoryId === selectedCategoryIds[i-1])?.children;
+        const newTreeLevel = categoryTreeLevels[i-1]?.find(categoryItem => categoryItem.categoryId === selectedCategories[i-1])?.children;
         if(newTreeLevel){
             categoryTreeLevels.push(newTreeLevel);
         }
@@ -153,7 +153,6 @@ const MenuContent = ({
                 <MenuItem 
                     onClick={() =>{
                         setSelectedCategories(prev => prev.slice(0, -1));
-                        setCurrentCategoryLevel(prev => prev - 1);
                     }}
                 >
                     <span style={{color: '#1976d2'}}>Back</span>
@@ -162,6 +161,9 @@ const MenuContent = ({
                     onClick={() => {
                         navigate(`/products/categories/${currentCategory?.categoryId}`);
                         handleClose();
+                        setTimeout(() => {
+                            setSelectedCategories([]);
+                        }, 500);
                     }}
                 >
                     <span style={{color: '#63a4ff'}}>All {currentCategory?.name}</span>
@@ -172,7 +174,6 @@ const MenuContent = ({
                     <MenuItem
                         onClick={() => {
                             setSelectedCategories(prev => [...prev, categoryItem.categoryId]);
-                            setCurrentCategoryLevel(prev => prev + 1);
                         }}
                     >
                         {categoryItem.name}
@@ -185,7 +186,6 @@ const MenuContent = ({
                         handleClose();
                         setTimeout(() => {
                             setSelectedCategories([]);
-                            setCurrentCategoryLevel(0);
                         }, 500);
                     }}>
                         {categoryItem.name}
@@ -261,7 +261,6 @@ const MenuContent = ({
                 handleClose();
                 setTimeout(() => {
                     setSelectedCategories([]);
-                    setCurrentCategoryLevel(0);
                 }, 500);
             }}
         >
