@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserInfo } from "../UserData";
+import { TokenUserInfoType } from "../UserData";
 import { jwtDecode } from "jwt-decode";
 
 type UserState = {
     token: string | null;
-    info: UserInfo | null;
+    info: TokenUserInfoType | null;
 };
 
 // STATE
@@ -21,7 +21,7 @@ export const userSlice = createSlice({
         registerTokenAndUserInfo(state, action: PayloadAction<string>){
             state.token = action.payload;
 
-            const decoded = jwtDecode(action.payload) as UserInfo;
+            const decoded = jwtDecode(action.payload) as TokenUserInfoType;
             state.info = decoded;
         },
     }

@@ -4,16 +4,20 @@ import { ErrorMessage, webAPIUrl } from "./Settings";
 type UserRole = 'Customer' | 'Admin';
 type UserMembershipStatus = 'active' | 'pastDue' | 'canceled';
 
-export type UserInfo = {
+export type TokenUserInfoType = {
     userId: string,
+    username: string,
+    role: UserRole
+};
+
+type UserInfoType = {
     email: string,
     username: string,
     phoneNumber: string,
     firstName: string,
     lastname: string,
     address: string,
-    role: UserRole
-};
+}
 
 type UserInfoUpdateRequest = {
     username?: string,
@@ -50,7 +54,7 @@ type MembershipPortalSessionResponse = {
     url: string
 }
 
-export const getMyInfo = async (token: string): Promise<UserInfo | ErrorMessage> => {
+export const getMyInfo = async (token: string): Promise<TokenUserInfoType | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/users/me`, {headers: {Authorization: `Bearer ${token}`}});
 
