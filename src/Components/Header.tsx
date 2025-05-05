@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import './Styles/Header.scss';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';

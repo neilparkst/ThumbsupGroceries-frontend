@@ -3,7 +3,7 @@ import './ProductListPage.scss';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { CategoryTree, getCategoryTree, getProducts, ProductSimple } from '../../Data/ProductData';
-import { Box, Divider, FormControl, IconButton, InputAdornment, List, ListItem, ListItemIcon, ListItemText, MenuItem, Pagination, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box, FormControl, IconButton, InputAdornment, List, ListItem, ListItemIcon, ListItemText, MenuItem, Pagination, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { getCategoryNameById, getTreePath } from '../../Data/Util';
