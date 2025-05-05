@@ -22,6 +22,7 @@ import { Provider } from 'react-redux';
 import NotFoundPage from './Pages/NotFoundPage';
 import Header from './Components/Header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
 
 const store = getStore();
 const queryClient = new QueryClient({
@@ -68,6 +69,10 @@ function App() {
           </BrowserRouter>
         </QueryClientProvider>
       </Provider>
+      <ToastContainer
+        position='top-center'
+        hideProgressBar
+      />
     </div>
   );
 }

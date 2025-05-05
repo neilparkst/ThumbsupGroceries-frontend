@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import './ProductDetailPage.scss';
 import { Link, useParams } from 'react-router-dom';
 import { addReview, getProduct, getReviews, Product, removeReview, ReviewType, updateReview } from '../../../Data/ProductData';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { domain } from '../../../Data/Settings';
 import { Box, Button, Pagination, Popper, Rating, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -118,7 +118,6 @@ const ProductDetailPage = () => {
                 </div>
             </div>
             <ReviewContainer productId={product.productId} />
-            <ToastContainer />
         </div>
     );
 };

@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '../../../../Data/GlobalState/Store';
 import { addProduct, ProductAddRequest } from '../../../../Data/ProductData';
 import NotFoundPage from '../../../NotFoundPage';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AdminProductAddPage = () => {
@@ -157,7 +157,6 @@ const AdminProductAddPage = () => {
                     </Button>
                 </Box>
             </Card>
-            <ToastContainer />
         </div>
     );
 };

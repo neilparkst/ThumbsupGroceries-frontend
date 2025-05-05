@@ -7,7 +7,7 @@ import './SignInPage.scss';
 import { signIn, SignInResponse } from '../../Data/AuthData';
 import { useDispatch } from 'react-redux';
 import { registerTokenAndUserInfo } from '../../Data/GlobalState/UserSlice';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const SignInPage = () => {
     const [ searchParams ] = useSearchParams();
@@ -63,7 +63,6 @@ const SignInPage = () => {
                     </Button>
                 </form>
             </Card>
-            <ToastContainer />
         </div>
     );
 };

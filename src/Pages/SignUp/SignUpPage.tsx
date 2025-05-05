@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Card from '../../Components/Card';
 import { signUp, SignUpResponse } from '../../Data/AuthData';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const SignUpPage = () => {
     const navigate = useNavigate();
@@ -138,7 +138,6 @@ const SignUpPage = () => {
                     </Button>
                 </Box>
             </Card>
-            <ToastContainer />
         </div>
     );
 };

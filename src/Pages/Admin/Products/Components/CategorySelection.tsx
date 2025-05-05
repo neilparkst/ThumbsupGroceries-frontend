@@ -3,7 +3,7 @@ import './CategorySelection.scss';
 import { CategoryTree, getCategoryTree } from '../../../../Data/ProductData';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CategorySelection = (
@@ -90,7 +90,6 @@ const CategorySelection = (
                     ))}
                 </Select>
             </FormControl>
-            <ToastContainer />
         </div>
     );
 };
