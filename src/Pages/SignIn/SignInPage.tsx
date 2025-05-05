@@ -7,6 +7,7 @@ import './SignInPage.scss';
 import { signIn, SignInResponse } from '../../Data/AuthData';
 import { useDispatch } from 'react-redux';
 import { registerTokenAndUserInfo } from '../../Data/GlobalState/UserSlice';
+import { toast, ToastContainer } from 'react-toastify';
 
 const SignInPage = () => {
     const [ searchParams ] = useSearchParams();
@@ -23,7 +24,7 @@ const SignInPage = () => {
         
         const response = await signIn({email, password});
         if('errorMessage' in response){
-            alert(response.errorMessage);
+            toast.error(response.errorMessage);
             return;
         }
 
@@ -62,6 +63,7 @@ const SignInPage = () => {
                     </Button>
                 </form>
             </Card>
+            <ToastContainer />
         </div>
     );
 };

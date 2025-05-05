@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Card from '../../Components/Card';
 import { signUp, SignUpResponse } from '../../Data/AuthData';
+import { toast, ToastContainer } from 'react-toastify';
 
 const SignUpPage = () => {
     const navigate = useNavigate();
@@ -14,12 +15,12 @@ const SignUpPage = () => {
     const onSubmit = async (formData: any) => {
         const response = await signUp(formData);
         if('errorMessage' in response){
-            alert(response.errorMessage);
+            toast.error(response.errorMessage);
             return;
         }
 
         const email = (response as SignUpResponse).email;
-        alert(`${email} has been signed up succesfully!`);
+        toast.success(`${email} has been signed up succesfully!`);
 
         navigate('/signin');
     };
@@ -137,6 +138,7 @@ const SignUpPage = () => {
                     </Button>
                 </Box>
             </Card>
+            <ToastContainer />
         </div>
     );
 };
