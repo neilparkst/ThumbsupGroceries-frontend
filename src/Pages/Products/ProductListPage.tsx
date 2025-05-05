@@ -130,7 +130,6 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
     const navigate = useNavigate();
 
     const [ selectedCategories, setSelectedCategories ] = useState<number[]>([]);
-    const [ currentCategoryLevel, setCurrentCategoryLevel ] = useState(0);
     const categoryTreeLengthRef = useRef(0);
     
     useEffect(() => {
@@ -139,12 +138,13 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
         }
         const path = getTreePath(categoryTree, initialCategoryId);
         setSelectedCategories(path);
-        setCurrentCategoryLevel(Math.min(path.length, 2));
     }, [categoryTree, initialCategoryId])
 
     if(!categoryTree){
         return null;
     }
+
+    const currentCategoryLevel = Math.min(selectedCategories.length, 2);
 
     let categoryTreeLevels = [categoryTree];
     for(let i = 1; i <= 2; i++){
@@ -168,7 +168,6 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
                         disablePadding
                         onClick={() =>{
                             setSelectedCategories(prev => prev.slice(0, -1));
-                            setCurrentCategoryLevel(prev => prev - 1);
                         }}
                         className='Item'
                         style={{
@@ -215,10 +214,7 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
                         onClick={() => {
                             if(currentCategoryLevel < 2){
                                 setSelectedCategories(prev => [...prev, categoryItem.categoryId]);
-                                setCurrentCategoryLevel(prev => prev + 1);
                             } else{
-                                setSelectedCategories([]);
-                                setCurrentCategoryLevel(0);
                                 navigate(`/products/categories/${categoryItem.categoryId}`);
                             }
                         }}
