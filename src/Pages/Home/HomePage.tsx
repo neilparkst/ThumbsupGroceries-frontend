@@ -9,6 +9,7 @@ import { Button, MobileStepper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import LoadingCircle from '../../Components/LoadingCircle';
 
 const HomePage = () => {
     return (
@@ -41,7 +42,7 @@ const HomePage = () => {
 
 const ITEM_WIDTH = 228 + 20;
 const ProductCarousel = () => {
-    const {data: products} = useQuery({
+    const {data: products, isLoading} = useQuery({
         queryKey: ['products', {categoryId: undefined, sort: 'relevance', search: undefined, page: 1, pageSize: 24}],
         queryFn: async () => {
             const response = await getProducts();
@@ -73,7 +74,7 @@ const ProductCarousel = () => {
     }, [products?.length]);
 
     if(!products){
-        return null;
+        return <LoadingCircle isOpen={isLoading} />;
     }
 
     const totalPages = Math.ceil(products.length / itemsPerPage);

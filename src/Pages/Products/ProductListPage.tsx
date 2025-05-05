@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { getCategoryNameById, getTreePath } from '../../Data/Util';
 import ProductCard from '../../Components/ProductCard';
+import LoadingCircle from '../../Components/LoadingCircle';
 
 const ProductListPage = () => {
     const params = useParams();
@@ -231,7 +232,7 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
 const ProductList = ({categoryId, search, sort, page, pageSize} : {categoryId?: number, search?: string, sort?: string, page?: number, pageSize?: number}) => {
     const navigate = useNavigate();
     
-    const {data: products} = useQuery({
+    const {data: products, isLoading} = useQuery({
         queryKey: ['products', {categoryId: categoryId, sort: sort, search: search, page: page, pageSize: pageSize}],
         queryFn: async () => {
             const response = await getProducts(categoryId, sort, search, page, pageSize);
@@ -278,6 +279,7 @@ const ProductList = ({categoryId, search, sort, page, pageSize} : {categoryId?: 
                     }}
                 />
             </div>
+            <LoadingCircle isOpen={isLoading} />
         </div>
     )
 }

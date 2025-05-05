@@ -8,6 +8,7 @@ import { Box, Button, Pagination, Popper, Rating, TextField } from '@mui/materia
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../../Data/GlobalState/Store';
 import Modal from '../../../Components/Modal';
+import LoadingCircle from '../../../Components/LoadingCircle';
 
 const ProductDetailPage = () => {
     const params = useParams();
@@ -20,12 +21,16 @@ const ProductDetailPage = () => {
     const [popperOpen, setPopperOpen] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
+    const [ isLoading, setIsLoading ] = useState(false);
+
     useEffect(() => {
         const getProductInfo = async () => {
             if(!productId || isNaN(productId)){
                 return;
             }
+            setIsLoading(true);
             const response = await getProduct(productId);
+            setIsLoading(false);
             if('errorMessage' in response){
                 toast.error(response.errorMessage);
                 return;
@@ -39,7 +44,7 @@ const ProductDetailPage = () => {
     }, [productId])
 
     if(!product){
-        return null;
+        return <LoadingCircle isOpen={isLoading} />;
     }
 
     return (
@@ -127,12 +132,15 @@ const ReviewContainer = memo(({productId} : {productId: number}) => {
 
     const [ reviews, setReviews ] = useState<ReviewType[]>([]);
     const [ reviewPage, setReviewPage ] = useState<number>(1);
+    const [ isLoading, setIsLoading ] = useState(false);
 
     const fetchReviews = useCallback(async () => {
         if(!productId || isNaN(productId)){
             return;
         }
+        setIsLoading(true);
         const response = await getReviews(productId, reviewPage);
+        setIsLoading(false);
         if('errorMessage' in response){
             return;
         }
@@ -152,6 +160,7 @@ const ReviewContainer = memo(({productId} : {productId: number}) => {
                 {reviews.map(review => (
                     <Review review={review} productId={productId} onReviewChange={fetchReviews} />
                 ))}
+                <LoadingCircle isOpen={isLoading} isLocal />
                 <Pagination
                     count={Math.ceil((reviews.length) / 5)}
                     page={reviewPage}
