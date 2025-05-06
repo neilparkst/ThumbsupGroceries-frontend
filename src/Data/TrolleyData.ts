@@ -32,7 +32,7 @@ type TrolleyContent = {
     totalPrice: number
 };
 
-type TrolleyItemRequest = {
+export type TrolleyItemRequest = {
     productId: number,
     priceUnitType: PriceUnitType,
     quantity: number

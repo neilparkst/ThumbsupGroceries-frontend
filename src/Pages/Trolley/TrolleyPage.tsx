@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTrolleyContent, TrolleyItemType } from '../../Data/TrolleyData';
+import { getTrolleyContent, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
@@ -71,7 +71,7 @@ const TrolleyPage = () => {
                     <Checkbox
                         checked={selectedTrolleyItems.has(item.trolleyItemId)}
                     />
-                    <TrolleyItem item={item} />
+                    <TrolleyItem key={item.quantity} item={item} />
                 </div>
             ))}
             </div>
@@ -118,7 +118,34 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
         totalPrice
     } = item;
 
+    const token = useSelector((state: GlobalState) => state.user.token);
+
     const [currentQuantity, setCurrentQuantity] = useState(quantity);
+
+    const queryClient = useQueryClient();
+    const quantityMutation = useMutation({
+        mutationFn: async ({trolleyItemId, request} : {trolleyItemId: number, request: TrolleyItemRequest}) => {
+            const {productId, priceUnitType, quantity} = request;
+            if(token){
+                const response = await updateTrolleyItem(trolleyItemId, {productId, priceUnitType, quantity}, token);
+                if('errorMessage' in response){
+                    throw new Error();
+                }
+
+                return response.quantity;
+            } else{
+                throw new Error();
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['trolley']});
+        },
+        onError: () => {
+            setCurrentQuantity(quantity);
+            toast.error('Failed to update item in trolley');
+        }
+    });
+
 
     return(
         <div className="TrolleyItem">
@@ -151,19 +178,59 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
                         >
                             <button
                                 className='Button'
-                                disabled={currentQuantity === 1}
+                                disabled={quantity === 1}
+                                onClick={() => quantityMutation.mutate({
+                                    trolleyItemId,
+                                    request: {
+                                        productId,
+                                        priceUnitType: productPriceUnitType,
+                                        quantity: quantity - 1
+                                    }
+                                })}
                             >
                                 -
                             </button>
                         </ButtonBase>
                         <TextField
+                            type='number'
                             className='Input'
-                            value={currentQuantity}
                             size='small'
+                            value={currentQuantity}
+                            onChange={(e) => {
+                                const value = Number(e.target.value);
+                                if(productPriceUnitType === 'ea'){
+                                    setCurrentQuantity(Math.trunc(value));
+                                } else{
+                                    setCurrentQuantity(value);
+                                }
+                            }}
+                            onBlur={(e) => {
+                                const value = Number(e.target.value);
+                                if(value <= 0){
+                                    setCurrentQuantity(quantity);
+                                    return;
+                                }
+                                
+                                quantityMutation.mutate({
+                                trolleyItemId,
+                                request: {
+                                    productId,
+                                    priceUnitType: productPriceUnitType,
+                                    quantity: productPriceUnitType === 'ea' ? Math.trunc(value) : value
+                                }})
+                            }}
                         />
                         <ButtonBase>
                             <button
                                 className='Button'
+                                onClick={() => quantityMutation.mutate({
+                                    trolleyItemId,
+                                    request: {
+                                        productId,
+                                        priceUnitType: productPriceUnitType,
+                                        quantity: quantity + 1
+                                    }
+                                })}
                             >
                                 +
                             </button>
