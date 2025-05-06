@@ -247,6 +247,7 @@ const MenuContent = ({
                     <MenuItem onClick={() => {
                         handleClose();
                         navigate('/');
+                        sessionStorage.removeItem("token");
                         window.location.reload();
                     }} >
                         Sign Out
