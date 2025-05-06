@@ -11,9 +11,25 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '../Data/GlobalState/Store';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { getTrolleyCount, TrolleyCountResponse } from '../Data/TrolleyData';
 
 const Header = () => {
     const navigate = useNavigate();
+
+    const token = useSelector((state: GlobalState) => state.user.token);
+    const { data: trolleyCount } = useQuery({
+        queryKey: ['trolleyCount'],
+        queryFn: async () => {
+            if(token){
+                const response = await getTrolleyCount(token);
+                if('errorMessage' in response){
+                    throw new Error(response.errorMessage);
+                }
+    
+                return (response as TrolleyCountResponse).itemCount;
+            }
+        }
+    })
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [menuContentType, setMenuContentType] = useState<MenuContentType>('categories');
@@ -86,6 +102,11 @@ const Header = () => {
                             <div className='Trolley'>
                                 <ShoppingCartIcon />
                                 <span>Trolley</span>
+                                {trolleyCount !== undefined &&
+                                    <div className="TrolleyCount">
+                                        {trolleyCount}
+                                    </div>
+                                }
                             </div>
                         </Link>
                     </div>

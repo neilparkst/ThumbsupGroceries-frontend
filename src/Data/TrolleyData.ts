@@ -5,7 +5,7 @@ type PriceUnitType = 'ea' | 'kg';
 type ServiceMethod = 'delivery' | 'pickup';
 type TrolleyTimeSlotStatus = 'available' | 'unavailable';
 
-type TrolleyCountResponse = {
+export type TrolleyCountResponse = {
     trolleyId: number,
     itemCount: number
 };
