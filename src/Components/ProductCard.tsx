@@ -53,7 +53,14 @@ const ProductCard = ({product}: {product: ProductSimple}) => {
                 <div className="TrolleyQuantityContainer">
                     <TextField
                         value={quantity}
-                        onChange={(e) => setQuantity(Number(e.target.value))}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if(priceUnitType === 'ea'){
+                                setQuantity(Math.trunc(value));
+                            } else{
+                                setQuantity(value);
+                            }
+                        }}
                         type="number"
                         slotProps={{
                             htmlInput: {
