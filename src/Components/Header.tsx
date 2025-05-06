@@ -18,7 +18,7 @@ const Header = () => {
 
     const token = useSelector((state: GlobalState) => state.user.token);
     const { data: trolleyCount } = useQuery({
-        queryKey: ['trolleyCount'],
+        queryKey: ['trolleyCount', token],
         queryFn: async () => {
             if(token){
                 const response = await getTrolleyCount(token);
