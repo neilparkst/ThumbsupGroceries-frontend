@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTrolleyContent, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTrolleyContent, removeTrolleyItem, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
@@ -244,7 +244,22 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
                             </button>
                         </ButtonBase>
                     </div>
-                    <Button>
+                    <Button
+                        onClick={async () => {
+                            if(token){
+                                const response = await removeTrolleyItem(trolleyItemId, token);
+                                if('errorMessage' in response){
+                                    toast.error('Failed to remove item from trolley');
+                                    return;
+                                }
+                                queryClient.invalidateQueries({queryKey: ['trolley']});
+                                queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+
+                            } else{
+                                toast.error('Failed to remove item from trolley');
+                            }
+                        }}
+                    >
                         <Cancel />
                         Remove
                     </Button>
