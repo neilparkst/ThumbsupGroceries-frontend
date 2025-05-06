@@ -3,10 +3,19 @@ import './Styles/ProductCard.scss';
 import { ProductSimple } from '../Data/ProductData';
 import { domain } from '../Data/Settings';
 import { Button, Popper, Rating, TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { addTrolleyItem } from '../Data/TrolleyData';
+import { useSelector } from 'react-redux';
+import { GlobalState } from '../Data/GlobalState/Store';
+import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ProductCard = ({product}: {product: ProductSimple}) => {
     const {productId, name, price, priceUnitType, image, rating, reviewCount} = product;
+
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const token = useSelector((state: GlobalState) => state.user.token);
 
     const [quantity, setQuantity] = useState(1);
     const [popperOpen, setPopperOpen] = useState(false);
@@ -42,9 +51,6 @@ const ProductCard = ({product}: {product: ProductSimple}) => {
             </div>
             <div className='TrolleyContainer'>
                 <div className="TrolleyQuantityContainer">
-                    {/* <IconButton onClick={() => setQuantity(Math.max(quantity - 1, 1))} sx={{padding: 0}}>
-                        <RemoveIcon sx={{fontSize: 18}} />
-                    </IconButton> */}
                     <TextField
                         value={quantity}
                         onChange={(e) => setQuantity(Number(e.target.value))}
@@ -58,17 +64,25 @@ const ProductCard = ({product}: {product: ProductSimple}) => {
                         variant="outlined"
                         sx={{ width: 80, textAlign: 'center' }}
                     />
-                    {/* <IconButton onClick={() => setQuantity(quantity + 1)} sx={{padding: 0}}>
-                        <AddIcon sx={{fontSize: 18}} />
-                    </IconButton> */}
                 </div>
                 <Button
                     variant="contained"
                     className='TrolleyButton'
                     ref={buttonRef}
-                    onClick={() => {
-                        setPopperOpen(true);
-                        setTimeout(() => setPopperOpen(false), 2000);
+                    onClick={async () => {
+                        if(token){
+                            const response = await addTrolleyItem({productId, priceUnitType, quantity}, token);
+                            if('errorMessage' in response){
+                                toast.error('Failed to add item to trolley');
+                                return;
+                            }
+
+                            queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+                            setPopperOpen(true);
+                            setTimeout(() => setPopperOpen(false), 2000);
+                        } else{
+                            navigate('/signin');
+                        }
                     }}
                 >
                     Add to trolley
