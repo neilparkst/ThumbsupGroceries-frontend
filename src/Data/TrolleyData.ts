@@ -10,7 +10,7 @@ export type TrolleyCountResponse = {
     itemCount: number
 };
 
-type TrolleyItem = {
+export type TrolleyItemType = {
     trolleyItemId: number
     productId: number,
     productName: string,
@@ -24,7 +24,7 @@ type TrolleyItem = {
 type TrolleyContent = {
     trolleyId: number,
     itemCount: number,
-    items: TrolleyItem[],
+    items: TrolleyItemType[],
     subTotalPrice: number,
     method: ServiceMethod,
     serviceFee: number,

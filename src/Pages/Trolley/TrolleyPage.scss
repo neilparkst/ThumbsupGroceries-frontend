@@ -1,0 +1,198 @@
+.TrolleyPage {
+    max-width: 1200px;
+    padding: 32px;
+    margin: 0 auto;
+
+    .TrolleyPageHeader {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px 16px 0px 16px;
+        background-color: #ffffff;
+        border-radius: 5px 5px 0px 0px;
+        border-bottom: 2px solid #e0e0e0;
+
+        .Intro {
+            display: flex;
+            align-items: baseline;
+            padding: 6px 6px 20px 6px;
+            gap: 10px;
+
+            .Title {
+                font-size: 28px;
+                font-weight: 600;
+            }
+
+            .ItemCount {
+                font-size: 20px;
+                color: #333;
+            }
+        }
+
+        .SelectAllAndRemove {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+
+    .TrolleyItemList {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 32px;
+
+        > div {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #e0e0e0;
+            
+            .TrolleyItem {
+                width: 100%;
+    
+                .TrolleyItemHeader {
+                    display: flex;
+                    justify-content: space-between;
+                    font-weight: 600;
+                    padding-bottom: 8px;
+                    border-bottom: 1px solid #e0e0e0;
+                    text-align: center;
+    
+                    .Product{
+                        flex: 1;
+                    }
+                    .Quantity{
+                        width: 300px;
+                    }
+                    .TotalPricePerItem {
+                        width: 200px;
+                    }
+                }
+    
+                .TrolleyItemContent {
+                    display: flex;
+                    justify-content: space-between;
+                    padding-top: 16px;
+    
+                    .Product {
+                        display: flex;
+                        flex: 1;
+                        gap: 16px;
+    
+                        img {
+                            width: 120px;
+                            height: 120px;
+                            object-fit: cover;
+                            border-radius: 4px;
+                        }
+    
+                        .NameAndPrice {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            gap: 10px;
+    
+                            .Name {
+                                font-size: 18px;
+                                font-weight: 500;
+                            }
+    
+                            .Price {
+                                color: #757575;
+                                font-size: 14px;
+                            }
+                        }
+                    }
+    
+                    .Quantity {
+                        width: 300px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: flex-end;
+                        gap: 8px;
+    
+                        .QuantityController {
+                            display: flex;
+                            align-items: center;
+    
+                            .Input {
+                                width: 80px;
+                                text-align: center;
+                            }
+
+                            button{
+                                width: 30px;
+                                height: 36px;
+                                background-color: #1976d2;
+                                border-radius: 5px;
+                                border: none;
+                                color: #ffffff;
+                                font-size: 16px;
+                                cursor: pointer;
+
+                                &:hover{
+                                    background-color: #1565c0;
+                                }
+
+                                &:disabled{
+                                    background-color: #757575;
+                                    cursor: default;
+                                }
+                            }
+                        }
+    
+                        > button {
+                            color: #f44336;
+                        }
+                    }
+    
+                    .TotalPricePerItem {
+                        width: 200px;
+                        text-align: center;
+                        font-weight: bold;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .TrolleySummary {
+        box-sizing: border-box;
+        padding: 24px 96px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        > div{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .Name {
+            font-weight: 600;
+        }
+
+        .Price {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .Total {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 16px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+}
