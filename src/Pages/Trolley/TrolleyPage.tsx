@@ -86,6 +86,14 @@ const TrolleyPage = () => {
                 </div>
                 <div className="Subtotal">
                     <div className="Name">
+                        Bag Fee
+                    </div>
+                    <div className="Price">
+                        ${trolley.bagFee.toFixed(2)}
+                    </div>
+                </div>
+                <div className="Subtotal">
+                    <div className="Name">
                         Subtotal
                     </div>
                     <div className="Price">
