@@ -162,6 +162,17 @@ export const removeTrolleyItem = async (trolleyItemId: number, token: string): P
     }
 }
 
+export const removeTrolleyItems = async (trolleyItemIds: number[], token: string): Promise<TrolleyItemDeleteResponse[] | ErrorMessage> => {
+    try{
+        const response = await axios.post(`${webAPIUrl}/trolley/bulk-deletion`, trolleyItemIds, {headers: {Authorization: `Bearer ${token}`}});
+
+        return response.data;
+    } catch (error){
+        const e = error as AxiosError;
+        return {errorMessage: ((e.response?.data as {title: string})?.title ?? e.response?.data) || "error occurred!"};
+    }
+}
+
 export const getTimeSlots = async (serviceMethod: ServiceMethod): Promise<TrolleyTimeSlot[] | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/trolley/time-slot/${serviceMethod}`);

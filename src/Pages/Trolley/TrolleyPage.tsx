@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTrolleyContent, removeTrolleyItem, TrolleyItemDeleteResponse, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTrolleyContent, removeTrolleyItem, removeTrolleyItems, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
-import { domain, ErrorMessage } from '../../Data/Settings';
+import { domain } from '../../Data/Settings';
 import { Cancel } from '@mui/icons-material';
 
 const TrolleyPage = () => {
@@ -75,40 +75,16 @@ const TrolleyPage = () => {
                         disabled={selectedTrolleyItems.size === 0}
                         onClick={async () => {
                             if(token){
-                                const responsePromises: Promise<TrolleyItemDeleteResponse | ErrorMessage>[] = [];
-                                selectedTrolleyItems.forEach(itemId => {
-                                    responsePromises.push(removeTrolleyItem(itemId, token))
-                                });
-                                Promise.all(responsePromises)
-                                    .then(responses => {
-                                        let failureCount = 0;
-                                        let successfulIds: number[] = [];
-                                        responses.forEach(response => {
-                                            if('errorMessage' in response){
-                                                failureCount += 1;
-                                            } else{
-                                                successfulIds.push(response.trolleyItemId);
-                                            }
-                                        })
-
-                                        if(failureCount === responses.length){ // all failed
-                                            toast.error('Failed to remove some items from trolley');
-                                        } else if(failureCount > 0){ // some failed
-                                            toast.error('Failed to remove some items from trolley');
-                                            queryClient.invalidateQueries({queryKey: ['trolley']});
-                                            queryClient.invalidateQueries({queryKey: ['trolleyCount']});
-                                        } else{ // all successful
-                                            queryClient.invalidateQueries({queryKey: ['trolley']});
-                                            queryClient.invalidateQueries({queryKey: ['trolleyCount']});
-                                        }
-
-                                        let newSelectedTrolleyItems = new Set(selectedTrolleyItems);
-                                        successfulIds.forEach(id => newSelectedTrolleyItems.delete(id));
-
-                                        setSelectedTrolleyItems(newSelectedTrolleyItems);
-                                    });
+                                const response = await removeTrolleyItems(Array.from(selectedTrolleyItems), token);
+                                if('errorMessage' in response){
+                                    toast.error('Failed to remove items from trolley');
+                                    return;
+                                }
+                                queryClient.invalidateQueries({queryKey: ['trolley']});
+                                queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+                                setSelectedTrolleyItems(new Set());
                             } else{
-                                toast.error('Failed to remove item from trolley');
+                                toast.error('Failed to remove items from trolley');
                             }
                         }}
                     >
