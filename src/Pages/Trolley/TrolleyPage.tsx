@@ -3,15 +3,17 @@ import React, { useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTrolleyContent, removeTrolleyItem, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTrolleyContent, removeTrolleyItem, TrolleyItemDeleteResponse, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
-import { domain } from '../../Data/Settings';
+import { domain, ErrorMessage } from '../../Data/Settings';
 import { Cancel } from '@mui/icons-material';
 
 const TrolleyPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
+
+    const queryClient = useQueryClient();
     const {data: trolley, isLoading, isError} = useQuery({
         queryKey: ['trolley', token],
         queryFn: async () => {
@@ -56,10 +58,49 @@ const TrolleyPage = () => {
                 <div className="SelectAllAndRemove">
                     <Checkbox
                         checked={trolley.itemCount === selectedTrolleyItems.size}
+                        onClick={() => {
+                            if(trolley.itemCount === selectedTrolleyItems.size){
+                                setSelectedTrolleyItems(new Set());
+                            } else{
+                                setSelectedTrolleyItems(new Set(trolley.items.map(item => item.trolleyItemId)));
+                            }
+                        }}
                     />
                     <Button
                         variant='contained'
                         size='small'
+                        disabled={selectedTrolleyItems.size === 0}
+                        onClick={async () => {
+                            if(token){
+                                const responsePromises: Promise<TrolleyItemDeleteResponse | ErrorMessage>[] = [];
+                                selectedTrolleyItems.forEach(itemId => {
+                                    responsePromises.push(removeTrolleyItem(itemId, token))
+                                });
+                                Promise.all(responsePromises)
+                                    .then(responses => {
+                                        let failureCount = 0;
+                                        responses.forEach(response => {
+                                            if('errorMessage' in response){
+                                                failureCount += 1;
+                                            }
+                                        })
+
+                                        if(failureCount === responses.length){ // all failed
+                                            toast.error('Failed to remove some items from trolley');
+                                        } else if(failureCount > 0){ // some failed
+                                            toast.error('Failed to remove some items from trolley');
+                                            queryClient.invalidateQueries({queryKey: ['trolley']});
+                                            queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+                                        } else{ // all successful
+                                            queryClient.invalidateQueries({queryKey: ['trolley']});
+                                            queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+                                        }
+
+                                    });
+                            } else{
+                                toast.error('Failed to remove item from trolley');
+                            }
+                        }}
                     >
                         Remove
                     </Button>
@@ -70,6 +111,23 @@ const TrolleyPage = () => {
                 <div key={item.trolleyItemId}>
                     <Checkbox
                         checked={selectedTrolleyItems.has(item.trolleyItemId)}
+                        onClick={() => {
+                            if(selectedTrolleyItems.has(item.trolleyItemId)){
+                                setSelectedTrolleyItems(prev => {
+                                    const newSelectedTrolleyItems = new Set(prev);
+                                    newSelectedTrolleyItems.delete(item.trolleyItemId);
+    
+                                    return newSelectedTrolleyItems;
+                                });
+                            } else{
+                                setSelectedTrolleyItems(prev => {
+                                    const newSelectedTrolleyItems = new Set(prev);
+                                    newSelectedTrolleyItems.add(item.trolleyItemId);
+    
+                                    return newSelectedTrolleyItems;
+                                });
+                            }
+                        }}
                     />
                     <TrolleyItem key={item.quantity} item={item} />
                 </div>

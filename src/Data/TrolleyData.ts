@@ -45,7 +45,7 @@ type TrolleyItemResponse = {
     quantity: number
 };
 
-type TrolleyItemDeleteResponse = {
+export type TrolleyItemDeleteResponse = {
     trolleyItemId: number,
     productId: number
 };
