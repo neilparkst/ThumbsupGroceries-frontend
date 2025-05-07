@@ -82,9 +82,12 @@ const TrolleyPage = () => {
                                 Promise.all(responsePromises)
                                     .then(responses => {
                                         let failureCount = 0;
+                                        let successfulIds: number[] = [];
                                         responses.forEach(response => {
                                             if('errorMessage' in response){
                                                 failureCount += 1;
+                                            } else{
+                                                successfulIds.push(response.trolleyItemId);
                                             }
                                         })
 
@@ -99,6 +102,10 @@ const TrolleyPage = () => {
                                             queryClient.invalidateQueries({queryKey: ['trolleyCount']});
                                         }
 
+                                        let newSelectedTrolleyItems = new Set(selectedTrolleyItems);
+                                        successfulIds.forEach(id => newSelectedTrolleyItems.delete(id));
+
+                                        setSelectedTrolleyItems(newSelectedTrolleyItems);
                                     });
                             } else{
                                 toast.error('Failed to remove item from trolley');
