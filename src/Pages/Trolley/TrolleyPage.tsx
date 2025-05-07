@@ -36,12 +36,15 @@ const TrolleyPage = () => {
         }
     }, [isError])
 
-    if(!trolley){
+    if(!trolley || trolley.itemCount === 0){
         return (
             <div className='TrolleyPage'>
                 <div className="TrolleyPageHeader">
                     <div className="Intro">
                         <span className='Title'>Trolley</span>
+                        {trolley?.itemCount === 0 &&
+                        <span className='ItemCount'>No items</span>
+                        }
                     </div>
                 </div>
             </div>
