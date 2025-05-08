@@ -178,6 +178,7 @@
     .TrolleySummary {
         box-sizing: border-box;
         padding: 24px 96px;
+        margin-bottom: 24px;
         background-color: #ffffff;
         border-radius: 8px;
         box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
@@ -207,4 +208,113 @@
             font-weight: bold;
         }
     }
+
+    .TimeSlots {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 24px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        
+        .MethodOptions {
+            display: flex;
+            gap: 16px;
+            justify-content: space-around;
+            margin-bottom: 24px;
+    
+            .MethodCard {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 16px;
+                background-color: #ffffff;
+                border-radius: 12px;
+                border: 2px solid #ddd;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+    
+                &:hover {
+                    background-color: #f0f0f0;
+                    border-color: #ccc;
+                }
+    
+                span {
+                    margin-top: 8px;
+                    font-weight: 600;
+                }
+            }
+        }
+    
+        .TimeOptions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+    
+            .Dates, .Times {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+    
+                .Date {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 120px;
+                    height: 60px;
+                    padding: 12px;
+                    margin-bottom: 12px;
+                    background-color: #ffffff;
+                    border-radius: 12px;
+                    border: 1px solid #ddd;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    font-weight: 600;
+    
+                    &:hover {
+                        background-color: #f0f0f0;
+                        border-color: #ccc;
+                    }
+    
+                    &.selected {
+                        background-color: #1976d2;
+                        color: #ffffff;
+                        border-color: #0d47a1;
+                    }
+                }
+    
+                .Time {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 120px;
+                    height: 50px;
+                    padding: 12px;
+                    background-color: #ffffff;
+                    border-radius: 12px;
+                    border: 1px solid #ddd;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    font-weight: 600;
+    
+                    &:hover {
+                        background-color: #f0f0f0;
+                        border-color: #ccc;
+                    }
+    
+                    &.selected {
+                        background-color: #1976d2;
+                        color: #ffffff;
+                        border-color: #0d47a1;
+                    }
+                }
+            }
+        }
+    }
+    
 }

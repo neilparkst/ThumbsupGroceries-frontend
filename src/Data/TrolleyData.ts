@@ -50,7 +50,7 @@ export type TrolleyItemDeleteResponse = {
     productId: number
 };
 
-type TrolleyTimeSlot = {
+export type TrolleyTimeSlot = {
     timeSlotId: number,
     start: string,
     end: string,

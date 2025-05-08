@@ -3,10 +3,14 @@ import React, { useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTimeSlots, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { domain } from '../../Data/Settings';
 import { Cancel } from '@mui/icons-material';
 
@@ -26,7 +30,7 @@ const TrolleyPage = () => {
                 return response;
             }
         }
-    })
+    });
 
     const [selectedTrolleyItems, setSelectedTrolleyItems] = useState<Set<number>>(new Set());
 
@@ -125,6 +129,15 @@ const TrolleyPage = () => {
                 bagFee={trolley.bagFee}
                 subTotalPrice={trolley.subTotalPrice}
                 totalPrice={trolley.totalPrice}
+            />
+            <TimeSlots
+                method={trolley.method}
+                onChangeMethod={() => {
+
+                }}
+                onChangeTimeSlot={() => {
+
+                }}
             />
             <LoadingCircle isOpen={isLoading} />
         </div>
@@ -338,6 +351,99 @@ const TrolleySummary = ({
             </div>
         </div>
     );
+}
+
+const TimeSlots = ({
+    method,
+    onChangeMethod,
+    onChangeTimeSlot
+} : {
+    method: ServiceMethod,
+    onChangeMethod: () => void,
+    onChangeTimeSlot: () => void
+}) => {
+    const [groupedTimeSlots, setGroupedTimeSlots] = useState<GroupedTimeSlotsType>([]);
+    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<number>();
+
+    const timeslotsForSelectedDate = groupedTimeSlots.find(grouped => grouped.date === selectedDate)?.slots;
+
+    useEffect(() => {
+        const getNewTimeSlots = async () => {
+            const response = await getTimeSlots(method);
+                if('errorMessage' in response){
+                toast.error('Could not load timeslots');
+                return;
+            }
+
+            setGroupedTimeSlots(groupTimeSlotsByDate(response));
+        }
+
+        getNewTimeSlots();
+    }, [method])
+
+    return (
+        <div className='TimeSlots'>
+            <div className="MethodOptions">
+               <div className="MethodCard">
+                   {method === 'delivery' ? <LocalShippingIcon /> : <LocalShippingOutlinedIcon />}
+                   <span>Delivery</span>
+               </div>
+               <div className="MethodCard">
+                   {method === 'pickup' ? <ShoppingBagIcon /> : <ShoppingBagOutlinedIcon />}
+                   <span>Pick up</span>
+               </div>
+            </div>
+            <div className="TimeOptions">
+                <div className="Dates">
+                    {groupedTimeSlots.map(grouped => {
+                        const date = new Date(grouped.date);
+                        const day = date.getDate();
+                        const month = date.toLocaleString('nz', {month: 'short'});
+                        const weekday = date.toLocaleString('nz', {weekday: 'short'});
+
+                        return (
+                            <div className="Date">
+                                {`${day} ${month} ${weekday}`}
+                            </div>
+                        )
+                    })}
+                </div>
+                <div className="Times">
+                    {timeslotsForSelectedDate?.map(slot => {
+                        const startTime = new Date(slot.start);
+                        const endTime = new Date(slot.end);
+
+                        return (
+                            <div className="Time">
+                                {`${startTime.getHours()}:${startTime.getMinutes().toPrecision(2)} - ${endTime.getHours()}:${endTime.getMinutes() < 10 ? ('0' + endTime.getMinutes()) : endTime.getMinutes()}`}
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+type GroupedTimeSlotsType = {date: string, slots: TrolleyTimeSlot[]}[];
+const groupTimeSlotsByDate = (timeSlots: TrolleyTimeSlot[]) => {
+    const grouped: {[date: string]: TrolleyTimeSlot[]} = {};
+
+    for (const timeSlot of timeSlots) {
+        const date = timeSlot.start.split("T")[0];
+
+        if (!grouped[date]) {
+            grouped[date] = [];
+        }
+
+        grouped[date].push(timeSlot);
+    }
+
+    return Object.entries(grouped).map(([date, slots]) => ({
+        date,
+        slots,
+    }));
 }
 
 export default TrolleyPage;
