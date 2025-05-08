@@ -224,21 +224,17 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
                 <div className="Quantity">
                     <div className="QuantityController">
                         <ButtonBase
+                            disabled={quantity === 1}
+                            onClick={() => quantityMutation.mutate({
+                                trolleyItemId,
+                                request: {
+                                    productId,
+                                    priceUnitType: productPriceUnitType,
+                                    quantity: quantity - 1
+                                }
+                            })}
                         >
-                            <button
-                                className='Button'
-                                disabled={quantity === 1}
-                                onClick={() => quantityMutation.mutate({
-                                    trolleyItemId,
-                                    request: {
-                                        productId,
-                                        priceUnitType: productPriceUnitType,
-                                        quantity: quantity - 1
-                                    }
-                                })}
-                            >
-                                -
-                            </button>
+                            -
                         </ButtonBase>
                         <TextField
                             type='number'
@@ -269,20 +265,17 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
                                 }})
                             }}
                         />
-                        <ButtonBase>
-                            <button
-                                className='Button'
-                                onClick={() => quantityMutation.mutate({
-                                    trolleyItemId,
-                                    request: {
-                                        productId,
-                                        priceUnitType: productPriceUnitType,
-                                        quantity: quantity + 1
-                                    }
-                                })}
-                            >
-                                +
-                            </button>
+                        <ButtonBase
+                            onClick={() => quantityMutation.mutate({
+                                trolleyItemId,
+                                request: {
+                                    productId,
+                                    priceUnitType: productPriceUnitType,
+                                    quantity: quantity + 1
+                                }
+                            })}
+                        >
+                            +
                         </ButtonBase>
                     </div>
                     <Button
