@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTrolleyContent, removeTrolleyItem, removeTrolleyItems, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
@@ -119,40 +119,13 @@ const TrolleyPage = () => {
                 </div>
             ))}
             </div>
-            <div className="TrolleySummary">
-                <div className="ServiceFee">
-                    <div className="Name">
-                        {capitalize(trolley.method)} Fee
-                    </div>
-                    <div className="Price">
-                        ${trolley.serviceFee.toFixed(2)}
-                    </div>
-                </div>
-                <div className="Subtotal">
-                    <div className="Name">
-                        Bag Fee
-                    </div>
-                    <div className="Price">
-                        ${trolley.bagFee.toFixed(2)}
-                    </div>
-                </div>
-                <div className="Subtotal">
-                    <div className="Name">
-                        Subtotal
-                    </div>
-                    <div className="Price">
-                        ${trolley.subTotalPrice.toFixed(2)}
-                    </div>
-                </div>
-                <div className="Total">
-                    <div className="Name">
-                        Total
-                    </div>
-                    <div className="Price">
-                        ${trolley.totalPrice.toFixed(2)}
-                    </div>
-                </div>
-            </div>
+            <TrolleySummary
+                method={trolley.method}
+                serviceFee={trolley.serviceFee}
+                bagFee={trolley.bagFee}
+                subTotalPrice={trolley.subTotalPrice}
+                totalPrice={trolley.totalPrice}
+            />
             <LoadingCircle isOpen={isLoading} />
         </div>
     );
@@ -314,6 +287,57 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
             </div>
         </div>
     )
+}
+
+const TrolleySummary = ({
+    method,
+    serviceFee,
+    bagFee,
+    subTotalPrice,
+    totalPrice
+} : {
+    method: ServiceMethod,
+    serviceFee: number,
+    bagFee: number,
+    subTotalPrice: number,
+    totalPrice: number
+}) => {
+    return(
+        <div className="TrolleySummary">
+            <div className="ServiceFee">
+                <div className="Name">
+                    {capitalize(method)} Fee
+                </div>
+                <div className="Price">
+                    ${serviceFee.toFixed(2)}
+                </div>
+            </div>
+            <div className="Subtotal">
+                <div className="Name">
+                    Bag Fee
+                </div>
+                <div className="Price">
+                    ${bagFee.toFixed(2)}
+                </div>
+            </div>
+            <div className="Subtotal">
+                <div className="Name">
+                    Subtotal
+                </div>
+                <div className="Price">
+                    ${subTotalPrice.toFixed(2)}
+                </div>
+            </div>
+            <div className="Total">
+                <div className="Name">
+                    Total
+                </div>
+                <div className="Price">
+                    ${totalPrice.toFixed(2)}
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default TrolleyPage;
