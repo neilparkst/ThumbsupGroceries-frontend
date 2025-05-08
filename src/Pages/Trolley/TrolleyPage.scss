@@ -48,6 +48,10 @@
             padding: 16px;
             background-color: #ffffff;
             border-bottom: 2px solid #e0e0e0;
+
+            &:last-child{
+                border-radius: 0px 0px 5px 5px;
+            }
             
             .TrolleyItem {
                 width: 100%;
