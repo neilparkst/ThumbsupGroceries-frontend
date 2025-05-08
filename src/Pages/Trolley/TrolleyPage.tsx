@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTimeSlots, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTimeSlots, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateServiceMethod, updateTrolleyItem } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
@@ -31,6 +31,7 @@ const TrolleyPage = () => {
             }
         }
     });
+    const chosenDateRef = useRef('');
 
     const [selectedTrolleyItems, setSelectedTrolleyItems] = useState<Set<number>>(new Set());
 
@@ -132,11 +133,21 @@ const TrolleyPage = () => {
             />
             <TimeSlots
                 method={trolley.method}
-                onChangeMethod={() => {
-
+                onChangeMethod={async (newServiceMethod: ServiceMethod) => {
+                    if(token){
+                        const response = await updateServiceMethod(trolley.trolleyId, newServiceMethod, token);
+                        if('errorMessage' in response){
+                            toast.error(`Could not change to ${newServiceMethod}`);
+                            return;
+                        }
+            
+                        queryClient.setQueryData(['trolley', token], {...trolley, method: response.method})
+                    } else{
+                        toast.error(`Could not change to ${newServiceMethod}`);
+                    }
                 }}
-                onChangeTimeSlot={() => {
-
+                onChangeTimeSlot={(chosenDate: string) => {
+                    chosenDateRef.current = chosenDate;
                 }}
             />
             <LoadingCircle isOpen={isLoading} />
@@ -359,12 +370,12 @@ const TimeSlots = ({
     onChangeTimeSlot
 } : {
     method: ServiceMethod,
-    onChangeMethod: () => void,
-    onChangeTimeSlot: () => void
+    onChangeMethod: (method: ServiceMethod) => void,
+    onChangeTimeSlot: (chosenDate: string) => void
 }) => {
     const [groupedTimeSlots, setGroupedTimeSlots] = useState<GroupedTimeSlotsType>([]);
     const [selectedDate, setSelectedDate] = useState('');
-    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<number>();
+    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<number | null>(null);
 
     const timeslotsForSelectedDate = groupedTimeSlots.find(grouped => grouped.date === selectedDate)?.slots;
 
@@ -385,11 +396,25 @@ const TimeSlots = ({
     return (
         <div className='TimeSlots'>
             <div className="MethodOptions">
-               <div className="MethodCard">
+               <div
+                    className={`MethodCard${method==='delivery' ? ' Selected' : ''}`}
+                    onClick={() => {
+                        onChangeMethod('delivery');
+                        setSelectedDate('');
+                        setSelectedTimeSlotId(null);
+                    }}
+                >
                    {method === 'delivery' ? <LocalShippingIcon /> : <LocalShippingOutlinedIcon />}
                    <span>Delivery</span>
                </div>
-               <div className="MethodCard">
+               <div
+                    className={`MethodCard${method==='pickup' ? ' Selected' : ''}`}
+                    onClick={() => {
+                        onChangeMethod('pickup');
+                        setSelectedDate('');
+                        setSelectedTimeSlotId(null);
+                    }}
+                >
                    {method === 'pickup' ? <ShoppingBagIcon /> : <ShoppingBagOutlinedIcon />}
                    <span>Pick up</span>
                </div>
@@ -403,7 +428,14 @@ const TimeSlots = ({
                         const weekday = date.toLocaleString('nz', {weekday: 'short'});
 
                         return (
-                            <div className="Date">
+                            <div
+                                key={grouped.date}
+                                className={`Date${selectedDate === grouped.date ? ' Selected' : ''}`}
+                                onClick={() => {
+                                    setSelectedDate(grouped.date);
+                                    setSelectedTimeSlotId(null);
+                                }}
+                            >
                                 {`${day} ${month} ${weekday}`}
                             </div>
                         )
@@ -415,8 +447,18 @@ const TimeSlots = ({
                         const endTime = new Date(slot.end);
 
                         return (
-                            <div className="Time">
-                                {`${startTime.getHours()}:${startTime.getMinutes().toPrecision(2)} - ${endTime.getHours()}:${endTime.getMinutes() < 10 ? ('0' + endTime.getMinutes()) : endTime.getMinutes()}`}
+                            <div
+                                key={slot.timeSlotId}
+                                className={`Time${selectedTimeSlotId === slot.timeSlotId ? ' Selected' : ''}${slot.status === 'unavailable' ? ' Unavailable' : ''}`}
+                                onClick={() => {
+                                    if(slot.status === 'unavailable'){
+                                        return;
+                                    }
+                                    setSelectedTimeSlotId(slot.timeSlotId);
+                                    onChangeTimeSlot(slot.start);
+                                }}
+                            >
+                                {`${startTime.getHours()}:${startTime.getMinutes() < 10 ? ('0' + startTime.getMinutes()) : startTime.getMinutes()} - ${endTime.getHours()}:${endTime.getMinutes() < 10 ? ('0' + endTime.getMinutes()) : endTime.getMinutes()}`}
                             </div>
                         )
                     })}

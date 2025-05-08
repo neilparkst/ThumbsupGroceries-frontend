@@ -173,6 +173,17 @@ export const removeTrolleyItems = async (trolleyItemIds: number[], token: string
     }
 }
 
+export const updateServiceMethod = async (trolleyId: number, serviceMethod: ServiceMethod, token: string): Promise<{trolleyId: number, method: ServiceMethod} | ErrorMessage> => {
+    try{
+        const response = await axios.post(`${webAPIUrl}/trolley/method/${trolleyId}`, serviceMethod, {headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}`}});
+
+        return response.data;
+    } catch (error){
+        const e = error as AxiosError;
+        return {errorMessage: ((e.response?.data as {title: string})?.title ?? e.response?.data) || "error occurred!"};
+    }
+}
+
 export const getTimeSlots = async (serviceMethod: ServiceMethod): Promise<TrolleyTimeSlot[] | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/trolley/time-slot/${serviceMethod}`);
