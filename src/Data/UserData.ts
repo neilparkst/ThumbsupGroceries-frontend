@@ -54,7 +54,7 @@ type MembershipPortalSessionResponse = {
     url: string
 }
 
-export const getMyInfo = async (token: string): Promise<TokenUserInfoType | ErrorMessage> => {
+export const getMyInfo = async (token: string): Promise<UserInfoType | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/users/me`, {headers: {Authorization: `Bearer ${token}`}});
 

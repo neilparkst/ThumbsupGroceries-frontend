@@ -13,6 +13,7 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { domain } from '../../Data/Settings';
 import { Cancel } from '@mui/icons-material';
+import { getMyInfo } from '../../Data/UserData';
 
 const TrolleyPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
@@ -34,12 +35,29 @@ const TrolleyPage = () => {
     const chosenDateRef = useRef('');
 
     const [selectedTrolleyItems, setSelectedTrolleyItems] = useState<Set<number>>(new Set());
+    const [deliveryAddress, setDeliveryAddress] = useState('');
 
     useEffect(() => {
         if(isError){
             toast.error("Failed to get trolley");
         }
     }, [isError])
+
+    useEffect(() => {
+        const getServiceAddress = async () => {
+            if(token){
+                const response = await getMyInfo(token);
+                if('errorMessage' in response){
+                    toast.error('Could not read user\'s address');
+                    return;
+                }
+    
+                setDeliveryAddress(response.address ?? '');
+            }
+        }
+
+        getServiceAddress();
+    }, [token])
 
     if(!trolley || trolley.itemCount === 0){
         return (
@@ -133,6 +151,7 @@ const TrolleyPage = () => {
             />
             <TimeSlots
                 method={trolley.method}
+                address={trolley.method === 'delivery' ? deliveryAddress : 'ThumbsUp Grocery Branch'}
                 onChangeMethod={async (newServiceMethod: ServiceMethod) => {
                     if(token){
                         const response = await updateServiceMethod(trolley.trolleyId, newServiceMethod, token);
@@ -359,10 +378,12 @@ const TrolleySummary = ({
 
 const TimeSlots = ({
     method,
+    address,
     onChangeMethod,
     onChangeTimeSlot
 } : {
     method: ServiceMethod,
+    address: string,
     onChangeMethod: (method: ServiceMethod) => void,
     onChangeTimeSlot: (chosenDate: string) => void
 }) => {
@@ -388,6 +409,9 @@ const TimeSlots = ({
 
     return (
         <div className='TimeSlots'>
+            <div className="Address">
+                {`To: ${address}`}
+            </div>
             <div className="MethodOptions">
                <div
                     className={`MethodCard${method==='delivery' ? ' Selected' : ''}`}
