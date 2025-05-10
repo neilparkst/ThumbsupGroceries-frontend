@@ -8,7 +8,10 @@ import Account from './Pages/Account'
 import PersonalDetailsPage from './Pages/Account/Details/PersonalDetailsPage';
 import MyOrdersPage from './Pages/Account/Orders/MyOrdersPage';
 import MyMembershipStatusPage from './Pages/Account/Membership/MyMembershipStatusPage';
+import Trolley from './Pages/Trolley';
 import TrolleyPage from './Pages/Trolley/TrolleyPage';
+import TrolleyCheckoutSuccessPage from './Pages/Trolley/Checkout/TrolleyCheckoutSuccessPage';
+import TrolleyCheckoutCancelPage from './Pages/Trolley/Checkout/TrolleyCheckoutCancelPage';
 import Products from './Pages/Products';
 import ProductListPage from './Pages/Products/ProductListPage';
 import ProductDetailPage from './Pages/Products/ProductDetail/ProductDetailPage';
@@ -57,7 +60,11 @@ function App() {
               <Route path='orders' element={<MyOrdersPage />} />
               <Route path='membership' element={<MyMembershipStatusPage />} />
             </Route>
-            <Route path='trolley' element={<TrolleyPage />} />
+            <Route path='trolley' element={<Trolley />}>
+              <Route index element={<TrolleyPage />} />
+              <Route path='checkout/success' element={<TrolleyCheckoutSuccessPage />} />
+              <Route path='checkout/cancel' element={<TrolleyCheckoutCancelPage />} />
+            </Route>
             <Route path='products' element={<Products />}>
               <Route index element={<ProductListPage />} />
               <Route path='categories/:categoryId' element={<ProductListPage />} />

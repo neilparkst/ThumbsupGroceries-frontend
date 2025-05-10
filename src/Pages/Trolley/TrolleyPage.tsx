@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTimeSlots, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateServiceMethod, updateTrolleyItem } from '../../Data/TrolleyData';
+import { getTimeSlots, getTrolleyCheckoutUrl, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateServiceMethod, updateTrolleyItem, validateTrolley } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
@@ -169,6 +169,67 @@ const TrolleyPage = () => {
                     chosenDateRef.current = chosenDate;
                 }}
             />
+            <div className='CheckoutButton'>
+                <Button
+                    fullWidth
+                    variant='contained'
+                    onClick={async () => {
+                        if(!chosenDateRef.current){
+                            toast.error('Please select timeslot');
+                            return;
+                        } else if(trolley.method === 'delivery' && !deliveryAddress){
+                            toast.error('Please set delivery address');
+                            return;
+                        }
+
+                        if(token){
+                            const trolleyValidationResponse = await validateTrolley({
+                                trolleyId: trolley.trolleyId,
+                                items: trolley.items.map(item => ({
+                                    productId: item.productId,
+                                    productPrice: item.productPrice,
+                                    priceUnitType: item.productPriceUnitType,
+                                    quantity: item.quantity,
+                                    totalPrice: item.totalPrice
+                                })),
+                                subTotalPrice: trolley.subTotalPrice,
+                                method: trolley.method,
+                                serviceFee: trolley.serviceFee,
+                                bagFee: trolley.bagFee,
+                                totalPrice: trolley.totalPrice
+                            }, token);
+
+                            if('errorMessage' in trolleyValidationResponse){
+                                toast.error('Could not checkout the trolley');
+                                return;
+                            } else if(!trolleyValidationResponse.isValid){
+                                toast.error('Prices of some products have changed. Please reload the page');
+                                return;
+                            }
+
+                            const checkoutUrlResponse = await getTrolleyCheckoutUrl({
+                                trolleyId: trolley.trolleyId,
+                                chosenDate: chosenDateRef.current,
+                                chosenAddress: trolley.method === 'delivery' ? deliveryAddress : 'ThumbsUp Grocery Branch',
+                                successUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/success',
+                                cancelUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/cancel'
+                            }, token);
+
+                            if('errorMessage' in checkoutUrlResponse){
+                                toast.error('Could not checkout the trolley');
+                                return;
+                            }
+
+                            window.location.href = checkoutUrlResponse.url;
+
+                        } else{
+                            toast.error('Could not checkout the trolley');
+                        }
+                    }}
+                >
+                    Checkout
+                </Button>
+            </div>
             <LoadingCircle isOpen={isLoading} />
         </div>
     );
