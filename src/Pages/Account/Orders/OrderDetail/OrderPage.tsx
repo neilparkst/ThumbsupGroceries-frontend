@@ -2,21 +2,25 @@ import React, { useEffect, useState } from 'react';
 import './OrderPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../../../Data/GlobalState/Store';
-import { getOrder, OrderContent, OrderItemType, ServiceMethod } from '../../../../Data/OrderData';
-import { useParams } from 'react-router-dom';
+import { cancelOrder, getOrder, OrderContent, OrderItemType, ServiceMethod } from '../../../../Data/OrderData';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LoadingCircle from '../../../../Components/LoadingCircle';
 import { domain } from '../../../../Data/Settings';
-import { capitalize } from '@mui/material';
+import Modal from '../../../../Components/Modal';
+import { Box, Button, capitalize } from '@mui/material';
 
 const OrderPage = () => {
     const params = useParams();
     const orderId = params.orderId ? parseInt(params.orderId) : undefined;
+    const navigate = useNavigate();
 
     const token = useSelector((state: GlobalState) => state.user.token);
 
-    const [isLoading, setIsLoading] = useState(false);
     const [order, setOrder] = useState<OrderContent>();
+    
+    const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const getNewOrders = async () => {
@@ -60,6 +64,53 @@ const OrderPage = () => {
                 subTotalPrice={order.subTotalAmount}
                 totalPrice={order.totalAmount}
             />
+            <div className="CancelButton">
+                {order.orderStatus === 'registered' &&
+                    <Button
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Cancel Order
+                    </Button>
+                }
+                <Modal isOpen={isModalOpen} handleClose={() => {setIsModalOpen(false);}}>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '30px', fontSize: '20px', textAlign: 'center', marginTop: '30px'}}>
+                        <span>
+                            Do you really want to cancel order?
+                        </span>
+                        <Box sx={{display: 'flex', justifyContent: 'center', gap: '20px'}}>
+                            <Button
+                                variant='contained'
+                                color='error'
+                                onClick={async () => {
+                                    if(token){
+                                        const response = await cancelOrder(order.orderId, token);
+                                        if('errorMessage' in response){
+                                            toast.error('Could not cancel order');
+                                            return;
+                                        }
+                                    } else{
+                                        toast.error('Could not cancel order');
+                                    }
+
+                                    setIsModalOpen(false);
+                                    toast.success('Order cancel requested');
+                                    navigate('/account/orders');
+                                }}
+                            >
+                                Yes
+                            </Button>
+                            <Button
+                                variant='contained'
+                                onClick={() => {
+                                    setIsModalOpen(false);
+                                }}
+                            >
+                                No
+                            </Button>
+                        </Box>
+                    </div>
+                </Modal>
+            </div>
         </div>
     );
 };
