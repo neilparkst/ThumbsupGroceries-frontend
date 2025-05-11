@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { ErrorMessage, webAPIUrl } from "./Settings";
 
-type ServiceMethod = 'delivery' | 'pickup';
+export type ServiceMethod = 'delivery' | 'pickup';
 type OrderStatus = 'registered' | 'onDelivery' | 'completed' | 'canceling' | 'canceled';
 type PriceUnitType = 'ea' | 'kg';
 
@@ -15,7 +15,7 @@ export type OrderSimple = {
     orderDate: string
 };
 
-type OrderItem = {
+export type OrderItemType = {
     orderItemId: number,
     productId: number,
     productName: string,
@@ -26,9 +26,9 @@ type OrderItem = {
     totalPrice: number
 };
 
-type OrderContent = {
+export type OrderContent = {
     orderId: number,
-    orderItems: OrderItem[],
+    orderItems: OrderItemType[],
     subTotalAmount: number,
     serviceMethod: ServiceMethod,
     bagFee: number,
