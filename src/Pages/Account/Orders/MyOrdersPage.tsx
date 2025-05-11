@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '../../../Data/GlobalState/Store';
 import { toast } from 'react-toastify';
 import { getOrders, OrderSimple } from '../../../Data/OrderData';
+import { Link } from 'react-router-dom';
 
 const MyOrdersPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
@@ -45,25 +46,27 @@ const MyOrdersPage = () => {
                     const chosenEndTime = chosenDateObject.getHours() + ":" + (chosenDateObject.getMinutes() < 10 ? '0' + chosenDateObject.getMinutes() : chosenDateObject.getMinutes());
 
                     return (
-                        <div className={`Order ${order.orderStatus === 'canceled' ? ' Canceled' : ''}`}>
-                            <div className='OrderHeader'>
-                                <div className='OrderDate'>
-                                    Ordered at: {orderDate}
+                        <Link to={`/account/orders/${order.orderId}`} style={{textDecoration: 'none'}}>
+                            <div className={`Order ${order.orderStatus === 'canceled' ? ' Canceled' : ''}`}>
+                                <div className='OrderHeader'>
+                                    <div className='OrderDate'>
+                                        Ordered at: {orderDate}
+                                    </div>
+                                    <div className='OrderStatus'>
+                                        {order.orderStatus}
+                                    </div>
                                 </div>
-                                <div className='OrderStatus'>
-                                    {order.orderStatus}
+                                <div className='TotalAmount'>
+                                    ${order.totalAmount}
+                                </div>
+                                <div className="Address">
+                                    {(order.serviceMethod === 'delivery' ? 'Delivery to ' : 'Pick up at ') + order.chosenAddress}
+                                </div>
+                                <div className="ExpectedDate">
+                                    {`Expected Time: ${chosenDate} ${chosenStartTime} - ${chosenEndTime}`}
                                 </div>
                             </div>
-                            <div className='TotalAmount'>
-                                ${order.totalAmount}
-                            </div>
-                            <div className="Address">
-                                {(order.serviceMethod === 'delivery' ? 'Delivery to ' : 'Pick up at ') + order.chosenAddress}
-                            </div>
-                            <div className="ExpectedDate">
-                                {`Expected Time: ${chosenDate} ${chosenStartTime} - ${chosenEndTime}`}
-                            </div>
-                        </div>
+                        </Link>
                     )
                 })}
             </div>

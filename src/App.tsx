@@ -6,6 +6,7 @@ import SignUpPage from './Pages/SignUp/SignUpPage';
 import MembershipSubscriptionPage from './Pages/MembershipSubscription/MembershipSubscriptionPage';
 import Account from './Pages/Account'
 import PersonalDetailsPage from './Pages/Account/Details/PersonalDetailsPage';
+import Orders from './Pages/Account/Orders';
 import MyOrdersPage from './Pages/Account/Orders/MyOrdersPage';
 import MyMembershipStatusPage from './Pages/Account/Membership/MyMembershipStatusPage';
 import Trolley from './Pages/Trolley';
@@ -26,6 +27,7 @@ import Header from './Components/Header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import { registerTokenAndUserInfo } from './Data/GlobalState/UserSlice';
+import OrderPage from './Pages/Account/Orders/OrderDetail/OrderPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,7 +59,10 @@ function App() {
             <Route path='membershipsubscription' element={<MembershipSubscriptionPage />} />
             <Route path='account' element={<Account />}>
               <Route path='details' element={<PersonalDetailsPage />} />
-              <Route path='orders' element={<MyOrdersPage />} />
+              <Route path='orders' element={<Orders />}>
+                <Route index element={<MyOrdersPage />} />
+                <Route path=':orderId' element={<OrderPage />} />
+              </Route>
               <Route path='membership' element={<MyMembershipStatusPage />} />
             </Route>
             <Route path='trolley' element={<Trolley />}>
