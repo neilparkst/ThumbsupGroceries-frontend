@@ -5,7 +5,7 @@ type ServiceMethod = 'delivery' | 'pickup';
 type OrderStatus = 'registered' | 'onDelivery' | 'completed' | 'canceling' | 'canceled';
 type PriceUnitType = 'ea' | 'kg';
 
-type OrderSimple = {
+export type OrderSimple = {
     orderId: number,
     serviceMethod: ServiceMethod,
     totalAmount: number,
