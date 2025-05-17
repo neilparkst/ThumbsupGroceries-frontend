@@ -65,7 +65,7 @@ const PersonalDetailsPage = () => {
                         </tr>
                         <tr>
                             <td>User Name</td>
-                            <td>{userInfo.username}</td>
+                            <td>{userInfo.userName}</td>
                         </tr>
                         <tr>
                             <td>First Name</td>

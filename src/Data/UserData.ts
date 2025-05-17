@@ -12,7 +12,7 @@ export type TokenUserInfoType = {
 
 export type UserInfoType = {
     email: string,
-    username: string,
+    userName: string,
     phoneNumber: string,
     firstName: string,
     lastname: string,
