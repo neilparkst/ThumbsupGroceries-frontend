@@ -59,22 +59,24 @@ const MyMembershipStatusPage = () => {
         <div className='MyMembershipStatusPage'>
             <Card title='My Membership'>
                 <table className='MembershipInfoTable'>
-                    <tr>
-                        <td>Membership Type</td>
-                        <td>{userMembership.planName}</td>
-                    </tr>
-                    <tr>
-                        <td>Membership Price</td>
-                        <td>{userMembership.planPrice} per month</td>
-                    </tr>
-                    <tr>
-                        <td>Start Date</td>
-                        <td>{new Date(userMembership.startDate).toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
-                    </tr>
-                    <tr>
-                        <td>Next Payment Date</td>
-                        <td>{new Date(userMembership.renewalDate).toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td>Membership Type</td>
+                            <td>{userMembership.planName}</td>
+                        </tr>
+                        <tr>
+                            <td>Membership Price</td>
+                            <td>{userMembership.planPrice} per month</td>
+                        </tr>
+                        <tr>
+                            <td>Start Date</td>
+                            <td>{new Date(userMembership.startDate).toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
+                        </tr>
+                        <tr>
+                            <td>Next Payment Date</td>
+                            <td>{new Date(userMembership.renewalDate).toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
+                        </tr>
+                    </tbody>
                 </table>
                 <div className="MembershipButton">
                     <Button
