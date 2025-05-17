@@ -9,6 +9,7 @@ import { Button } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
 import { useNavigate } from 'react-router-dom';
+import { getMembershipPortalUrl, getMyMembership, UserMembership } from '../../Data/UserData';
 
 const MembershipSubscriptionPage = () => {
     return (
@@ -44,6 +45,7 @@ const MembershipSelection = () => {
 
     const [membershipOptions, setMembershipOptions] = useState<MembershipOptionType[]>([]);
     const [selectedPlanId, setSelectedPlanId] = useState<number>(0);
+    const [userMembership, setUserMembership] = useState<UserMembership | {}>();
 
     useEffect(() => {
         const getNewMembershipOptions = async () => {
@@ -60,52 +62,114 @@ const MembershipSelection = () => {
         getNewMembershipOptions();
     }, [])
 
+    useEffect(() => {
+        const getCurrentUserMembership = async () => {
+            if(token){
+                const response = await getMyMembership(token);
+                if('errorMessage' in response){
+                    toast.error('Could not load membership options');
+                    return;
+                }
+                setUserMembership(response);
+            } else{
+                setUserMembership({});
+            }
+        }
+
+        getCurrentUserMembership();
+    }, [token])
+
+    let membershipButton;
+    if(userMembership === undefined){
+        membershipButton = '';
+    } else if('planId' in userMembership){
+        membershipButton = (
+            <Button
+                onClick={async () => {
+                    if(token){
+                        const portalUrl = await getMembershipPortalUrl({
+                            returnUrl: window.location.href
+                        }, token);
+    
+                        if('errorMessage' in portalUrl){
+                            toast.error('Could not request subscription');
+                            return;
+                        }
+    
+                        window.location.href = portalUrl.url;
+                    } else{
+                        navigate('/signin?redirectTo=membershipsubscription');
+                    }
+                }}
+            >
+                {userMembership.planName === 'Saver' ? 'Upgrade' : 'Manage'} Membership
+            </Button>
+        )
+    } else{
+        membershipButton = (
+            <Button
+                onClick={async () => {
+                    if(token){
+                        const checkoutUrlResponse = await getMembershipCheckoutUrl({
+                            planId: selectedPlanId,
+                            successUrl: window.location.protocol + '//' + window.location.host + '/membershipsubscription/checkout/success',
+                            cancelUrl: window.location.protocol + '//' + window.location.host + '/membershipsubscription/checkout/cancel'
+                        }, token);
+    
+                        if('errorMessage' in checkoutUrlResponse){
+                            toast.error('Could not request subscription');
+                            return;
+                        }
+    
+                        window.location.href = checkoutUrlResponse.url;
+                    } else{
+                        navigate('/signin?redirectTo=membershipsubscription');
+                    }
+                }}
+            >
+                Subscribe
+            </Button>
+        );
+    }
+
+    const userMembershipPlanId = userMembership && ('planId' in userMembership) && userMembership.planId;
+
     return (
         <div className="MembershipSelection">
+            {userMembershipPlanId &&
+            <div className="MembershipMessage">
+                you're currently <span>{userMembership.planName}</span>
+            </div>
+            }
             <div className="MembershipOptions">
                 {membershipOptions.map(option => (
                     <MembershipOption
                         key={option.planId}
                         option={option}
-                        isSelected={option.planId === selectedPlanId}
-                        onClick={() => setSelectedPlanId(option.planId)}
+                        isSelected={userMembershipPlanId ? (option.planId === userMembershipPlanId) : (option.planId === selectedPlanId)}
+                        onClick={() => {
+                            if(userMembershipPlanId){
+                                return;
+                            }
+                            setSelectedPlanId(option.planId)
+                        }}
+                        isSelectable = {!userMembershipPlanId}
                     />
                 ))}
             </div>
             <div className="MembershipButton">
-                <Button
-                    onClick={async () => {
-                        if(token){
-                            const checkoutUrlResponse = await getMembershipCheckoutUrl({
-                                planId: selectedPlanId,
-                                successUrl: window.location.protocol + '//' + window.location.host + '/membershipsubscription/checkout/success',
-                                cancelUrl: window.location.protocol + '//' + window.location.host + '/membershipsubscription/checkout/cancel'
-                            }, token);
-    
-                            if('errorMessage' in checkoutUrlResponse){
-                                toast.error('Could not request subscription');
-                                return;
-                            }
-    
-                            window.location.href = checkoutUrlResponse.url;
-                        } else{
-                            navigate('/signin?redirectTo=membershipsubscription');
-                        }
-                    }}
-                >
-                    Subscribe
-                </Button>
+                {membershipButton}
             </div>
         </div>
     )
 }
 
-const MembershipOption = ({option, isSelected, onClick} : {option: MembershipOptionType, isSelected: boolean, onClick: () => void}) => {
+const MembershipOption = ({option, isSelected, onClick, isSelectable} : {option: MembershipOptionType, isSelected: boolean, onClick: () => void, isSelectable: boolean}) => {
     const {name, price, durationMonths, description} = option;
 
     return (
         <div
-            className={`MembershipOption${isSelected ? ' Selected' : ''}`}
+            className={`MembershipOption${isSelected ? ' Selected' : ''}${isSelectable ? ' Selectable' : ''}`}
             onClick={() => onClick()}
         >
             <div className="Name">

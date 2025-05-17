@@ -30,6 +30,18 @@
         padding: 32px;
         background-color: #f9f9f9;
 
+        .MembershipMessage {
+            font-size: 28px;
+            color: #555;
+            text-align: center;
+
+            span {
+                font-weight: 700;
+                font-size: 36px;
+                color: #4a90e2;
+            }
+        }
+
         .MembershipOptions {
             width: 80%;
             margin: 30px auto 0px auto;
@@ -42,11 +54,18 @@
                 border: 2px solid #ddd;
                 border-radius: 12px;
                 padding: 20px;
-                cursor: pointer;
                 transition: border-color 0.3s, box-shadow 0.3s;
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
+                
+                &.isSelectable{
+                    cursor: pointer;
+                    &:hover {
+                        border-color: #4a90e2;
+                        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+                    }
+                }
 
                 .Name {
                     font-weight: 700;
@@ -66,11 +85,6 @@
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 1.4;
-                }
-
-                &:hover {
-                    border-color: #4a90e2;
-                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
                 }
 
                 &.Selected {

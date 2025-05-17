@@ -36,7 +36,7 @@ type UserPasswordUpdateRequest = {
     newPassword: string
 }
 
-type UserMembership = {
+export type UserMembership = {
     membershipId: number,
     planId: number,
     planName: string,
