@@ -10,7 +10,7 @@ export type TokenUserInfoType = {
     role: UserRole
 };
 
-type UserInfoType = {
+export type UserInfoType = {
     email: string,
     username: string,
     phoneNumber: string,
