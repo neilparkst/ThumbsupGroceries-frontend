@@ -33,6 +33,7 @@ import OrderPage from './Pages/Account/Orders/OrderDetail/OrderPage';
 import MembershipSubscriptionCheckoutSuccessPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutSuccessPage';
 import MembershipSubscriptionCheckoutCancelPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutCancelPage';
 import PersonalDetailsEditPage from './Pages/Account/Details/Edit/PersonalDetailsEditPage';
+import ChangePasswordPage from './Pages/Account/Details/ChangePassword/ChangePasswordPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,6 +71,7 @@ function App() {
               <Route path='details' element={<PersonalDetails />}>
                 <Route index element={<PersonalDetailsPage />} />
                 <Route path='edit' element={<PersonalDetailsEditPage />} />
+                <Route path='change-password' element={<ChangePasswordPage />} />
               </Route>
               <Route path='orders' element={<Orders />}>
                 <Route index element={<MyOrdersPage />} />
