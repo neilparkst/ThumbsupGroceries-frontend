@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
 import { useNavigate } from 'react-router-dom';
 import { getMembershipPortalUrl, getMyMembership, UserMembership } from '../../Data/UserData';
+import LoadingCircle from '../../Components/LoadingCircle';
 
 const MembershipSubscriptionPage = () => {
     return (
@@ -47,9 +48,15 @@ const MembershipSelection = () => {
     const [selectedPlanId, setSelectedPlanId] = useState<number>(0);
     const [userMembership, setUserMembership] = useState<UserMembership | {}>();
 
+    const [isOptionsLoading, setIsOptionsLoading] = useState(false);
+    const [isMyMembershipLoading, setIsMyMembershipLoading] = useState(false);
+    const isLoading = isOptionsLoading || isMyMembershipLoading;
+
     useEffect(() => {
         const getNewMembershipOptions = async () => {
+            setIsOptionsLoading(true);
             const response = await getMembershipOptions();
+            setIsOptionsLoading(false);
             if('errorMessage' in response){
                 toast.error('Could not load membership options');
                 return;
@@ -65,7 +72,9 @@ const MembershipSelection = () => {
     useEffect(() => {
         const getCurrentUserMembership = async () => {
             if(token){
+                setIsMyMembershipLoading(true);
                 const response = await getMyMembership(token);
+                setIsMyMembershipLoading(false);
                 if('errorMessage' in response){
                     return;
                 }
@@ -159,6 +168,7 @@ const MembershipSelection = () => {
             <div className="MembershipButton">
                 {membershipButton}
             </div>
+            <LoadingCircle isOpen={isLoading} />
         </div>
     )
 }
