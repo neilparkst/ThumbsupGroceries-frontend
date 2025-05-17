@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios"
 import { ErrorMessage, webAPIUrl } from "./Settings"
 
-type MembershipOption = {
+export type MembershipOptionType = {
     planId: number,
     name: string,
     price: number,
@@ -19,7 +19,7 @@ type MembershipCheckoutSessionResposne = {
     url: string
 };
 
-export const getMembershipOptions = async (): Promise<MembershipOption[] | ErrorMessage> => {
+export const getMembershipOptions = async (): Promise<MembershipOptionType[] | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/membership`);
 

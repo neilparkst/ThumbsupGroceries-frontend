@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './Pages/Home/HomePage';
 import SignInPage from './Pages/SignIn/SignInPage';
 import SignUpPage from './Pages/SignUp/SignUpPage';
+import MembershipSubscription from './Pages/MembershipSubscription';
 import MembershipSubscriptionPage from './Pages/MembershipSubscription/MembershipSubscriptionPage';
 import Account from './Pages/Account'
 import PersonalDetailsPage from './Pages/Account/Details/PersonalDetailsPage';
@@ -28,6 +29,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import { registerTokenAndUserInfo } from './Data/GlobalState/UserSlice';
 import OrderPage from './Pages/Account/Orders/OrderDetail/OrderPage';
+import MembershipSubscriptionCheckoutSuccessPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutSuccessPage';
+import MembershipSubscriptionCheckoutCancelPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutCancelPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,7 +59,11 @@ function App() {
             <Route path='' element={<HomePage />} />
             <Route path='signin' element={<SignInPage />} />
             <Route path='signup' element={<SignUpPage />} />
-            <Route path='membershipsubscription' element={<MembershipSubscriptionPage />} />
+            <Route path='membershipsubscription' element={<MembershipSubscription />}>
+              <Route index element={<MembershipSubscriptionPage />} />
+              <Route path='checkout/success' element={<MembershipSubscriptionCheckoutSuccessPage />} />
+              <Route path='checkout/cancel' element={<MembershipSubscriptionCheckoutCancelPage />} />
+            </Route>
             <Route path='account' element={<Account />}>
               <Route path='details' element={<PersonalDetailsPage />} />
               <Route path='orders' element={<Orders />}>
