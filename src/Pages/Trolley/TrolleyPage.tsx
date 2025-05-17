@@ -160,7 +160,7 @@ const TrolleyPage = () => {
                             return;
                         }
             
-                        queryClient.setQueryData(['trolley', token], {...trolley, method: response.method})
+                        queryClient.invalidateQueries({queryKey: ['trolley']});
                     } else{
                         toast.error(`Could not change to ${newServiceMethod}`);
                     }
