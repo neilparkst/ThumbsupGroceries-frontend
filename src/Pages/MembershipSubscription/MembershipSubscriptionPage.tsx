@@ -67,7 +67,6 @@ const MembershipSelection = () => {
             if(token){
                 const response = await getMyMembership(token);
                 if('errorMessage' in response){
-                    toast.error('Could not load membership options');
                     return;
                 }
                 setUserMembership(response);
