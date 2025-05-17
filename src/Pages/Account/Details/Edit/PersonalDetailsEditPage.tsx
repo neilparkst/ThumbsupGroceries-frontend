@@ -3,15 +3,18 @@ import './PersonalDetailsEditPage.scss';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { getMyInfo, updateMyInfo, UserInfoType } from '../../../../Data/UserData';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GlobalState } from '../../../../Data/GlobalState/Store';
 import { toast } from 'react-toastify';
 import Card from '../../../../Components/Card';
 import { Box, Button, TextField } from '@mui/material';
 import LoadingCircle from '../../../../Components/LoadingCircle';
+import { registerTokenAndUserInfo } from '../../../../Data/GlobalState/UserSlice';
 
 const PersonalDetailsEditPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
+    const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
     const { handleSubmit, control, formState: {errors} } = useForm({mode: 'onBlur'});
@@ -45,6 +48,7 @@ const PersonalDetailsEditPage = () => {
                 return;
             }
 
+            dispatch(registerTokenAndUserInfo(response.token));
             toast.success("Updated Info successfully!");
     
             navigate('/account/details');
