@@ -1,0 +1,12 @@
+.PersonalDetailsEditPage{
+    .PersonalDetailsEditForm{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .Name{
+            display: flex;
+            gap: 10px;
+        }
+    }
+}

@@ -6,6 +6,7 @@ import SignUpPage from './Pages/SignUp/SignUpPage';
 import MembershipSubscription from './Pages/MembershipSubscription';
 import MembershipSubscriptionPage from './Pages/MembershipSubscription/MembershipSubscriptionPage';
 import Account from './Pages/Account'
+import PersonalDetails from './Pages/Account/Details';
 import PersonalDetailsPage from './Pages/Account/Details/PersonalDetailsPage';
 import Orders from './Pages/Account/Orders';
 import MyOrdersPage from './Pages/Account/Orders/MyOrdersPage';
@@ -31,6 +32,7 @@ import { registerTokenAndUserInfo } from './Data/GlobalState/UserSlice';
 import OrderPage from './Pages/Account/Orders/OrderDetail/OrderPage';
 import MembershipSubscriptionCheckoutSuccessPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutSuccessPage';
 import MembershipSubscriptionCheckoutCancelPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutCancelPage';
+import PersonalDetailsEditPage from './Pages/Account/Details/Edit/PersonalDetailsEditPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,7 +67,10 @@ function App() {
               <Route path='checkout/cancel' element={<MembershipSubscriptionCheckoutCancelPage />} />
             </Route>
             <Route path='account' element={<Account />}>
-              <Route path='details' element={<PersonalDetailsPage />} />
+              <Route path='details' element={<PersonalDetails />}>
+                <Route index element={<PersonalDetailsPage />} />
+                <Route path='edit' element={<PersonalDetailsEditPage />} />
+              </Route>
               <Route path='orders' element={<Orders />}>
                 <Route index element={<MyOrdersPage />} />
                 <Route path=':orderId' element={<OrderPage />} />
