@@ -90,7 +90,7 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
     return (
         <Box
             component="form"
-            onSubmit={handleSubmit(onSubmit, (e) => console.log(e))}
+            onSubmit={handleSubmit(onSubmit)}
             className='ProductDetailInputForm'
         >
             <Controller
