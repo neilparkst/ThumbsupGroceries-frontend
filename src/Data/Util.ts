@@ -1,4 +1,6 @@
+import axios from "axios";
 import { CategoryTree } from "./ProductData";
+import { domain } from "./Settings";
 
 export const getTreePath = (tree: CategoryTree | undefined, id: number): number[] => {
     if(!tree || tree.length === 0){
@@ -39,4 +41,21 @@ export const getCategoryNameById = (tree: CategoryTree | undefined, id: number):
     }
 
     return '';
+}
+
+const urlToFile = async (url: string): Promise<File> => {
+    const fileName = url.split('/').pop() || 'unknown_file';
+    
+    const response = await axios.get(url, {
+        responseType: 'blob',
+    });
+    
+    const blob = response.data;
+    const fileType = blob.type || 'application/octet-stream';
+    
+    return new File([blob], fileName, { type: fileType });
+}
+
+export const loadImages = async (images: string[]): Promise<File[]> => {
+    return Promise.all(images.map(image => urlToFile(`${domain}${image}`)));
 }

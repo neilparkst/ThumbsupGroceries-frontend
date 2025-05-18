@@ -33,6 +33,7 @@ import MembershipSubscriptionCheckoutSuccessPage from './Pages/MembershipSubscri
 import MembershipSubscriptionCheckoutCancelPage from './Pages/MembershipSubscription/Checkout/MembershipSubscriptionCheckoutCancelPage';
 import PersonalDetailsEditPage from './Pages/Account/Details/Edit/PersonalDetailsEditPage';
 import ChangePasswordPage from './Pages/Account/Details/ChangePassword/ChangePasswordPage';
+import AdminProductEditPage from './Pages/Admin/Products/Edit/AdminProductEditPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,6 +93,7 @@ function App() {
               <Route path='products' element={<AdminProducts />}>
                 <Route index element={<AdminProductListPage />} />
                 <Route path='categories/:categoryId' element={<AdminProductListPage />} />
+                <Route path='edit/:productId' element={<AdminProductEditPage />} />
                 <Route path='new' element={<AdminProductAddPage />} />
               </Route>
             </Route>

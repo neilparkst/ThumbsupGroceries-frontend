@@ -153,9 +153,11 @@ const AdminProductListPage = () => {
                                 <td><img src={`${domain}${product.image}`} alt={product.name} /></td>
                                 <td>{product.price} / {product.priceUnitType}</td>
                                 <td>
-                                    <Button variant='contained'>
-                                        Edit
-                                    </Button>
+                                    <Link to={`edit/${product.productId}`}>
+                                        <Button variant='contained'>
+                                            Edit
+                                        </Button>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

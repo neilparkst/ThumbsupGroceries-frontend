@@ -26,13 +26,13 @@ export type ProductAddRequest = {
     categories: number[]
 };
 
-type ProductUpdateRequest = {
+export type ProductUpdateRequest = {
     name?: string,
     price?: number,
     priceUnitType?: PriceUnitType,
     description?: string,
     images?: File[],
-    quantity?: number,
+    quantity?: number | null,
     addedQuantity?: number,
     categories?: number[]
 };
@@ -114,9 +114,19 @@ export const addProduct = async (request: ProductAddRequest, token: string): Pro
 
 export const updateProduct = async (productId: number, request: ProductUpdateRequest, token: string): Promise<{productId: number} | ErrorMessage> => {
     try{
+        const formData = new FormData();
+        request.name && formData.append('name', request.name);
+        request.price && formData.append('price', request.price.toString());
+        request.priceUnitType && formData.append('priceUnitType', request.priceUnitType);
+        request.description && formData.append('description', request.description);
+        request.images && request.images.forEach(image => formData.append('images', image));
+        request.quantity && formData.append('quantity', request.quantity.toString());
+        request.addedQuantity && formData.append('addedQuantity', request.addedQuantity.toString());
+        request.categories && request.categories.forEach(category => formData.append('categories', category.toString()));
+
         const response = await axios.patch(
             `${webAPIUrl}/products/${productId}`,
-            request,
+            formData,
             {
                 headers:{
                     Authorization: `Bearer ${token}`
