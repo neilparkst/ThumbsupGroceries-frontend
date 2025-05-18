@@ -223,6 +223,14 @@ const MenuContent = ({
                     }}>
                         Admin
                     </MenuItem>
+                    <MenuItem onClick={() => {
+                        handleClose();
+                        navigate('/');
+                        sessionStorage.removeItem("token");
+                        window.location.reload();
+                    }} >
+                        Sign Out
+                    </MenuItem>
                 </>)
             } else if(userRole === 'Customer'){
                 menuContent = (<>
