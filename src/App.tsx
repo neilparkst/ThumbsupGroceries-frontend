@@ -21,7 +21,6 @@ import ProductDetailPage from './Pages/Products/ProductDetail/ProductDetailPage'
 import Admin from './Pages/Admin';
 import AdminProducts from './Pages/Admin/Products';
 import AdminProductListPage from './Pages/Admin/Products/AdminProductListPage';
-import AdminProductDetailPage from './Pages/Admin/Products/ProductDetail/AdminProductDetailPage';
 import AdminProductAddPage from './Pages/Admin/Products/New/AdminProductAddPage';
 import { useDispatch } from 'react-redux';
 import NotFoundPage from './Pages/NotFoundPage';
@@ -93,7 +92,6 @@ function App() {
               <Route path='products' element={<AdminProducts />}>
                 <Route index element={<AdminProductListPage />} />
                 <Route path='categories/:categoryId' element={<AdminProductListPage />} />
-                <Route path=':productId' element={<AdminProductDetailPage />} />
                 <Route path='new' element={<AdminProductAddPage />} />
               </Route>
             </Route>
