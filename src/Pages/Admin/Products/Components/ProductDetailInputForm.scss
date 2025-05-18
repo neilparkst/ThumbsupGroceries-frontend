@@ -1,0 +1,10 @@
+.ProductDetailInputForm{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .Group{
+        display: flex;
+        gap: 10px;
+    }
+}
