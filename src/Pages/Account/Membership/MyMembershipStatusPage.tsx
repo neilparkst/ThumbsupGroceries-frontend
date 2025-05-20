@@ -66,7 +66,7 @@ const MyMembershipStatusPage = () => {
                         </tr>
                         <tr>
                             <td>Membership Price</td>
-                            <td>{userMembership.planPrice} per month</td>
+                            <td>${userMembership.planPrice} per month</td>
                         </tr>
                         <tr>
                             <td>Start Date</td>
