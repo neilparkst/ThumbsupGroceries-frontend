@@ -480,6 +480,7 @@ const TimeSlots = ({
                         onChangeMethod('delivery');
                         setSelectedDate('');
                         setSelectedTimeSlotId(null);
+                        onChangeTimeSlot('');
                     }}
                 >
                    {method === 'delivery' ? <LocalShippingIcon /> : <LocalShippingOutlinedIcon />}
@@ -491,6 +492,7 @@ const TimeSlots = ({
                         onChangeMethod('pickup');
                         setSelectedDate('');
                         setSelectedTimeSlotId(null);
+                        onChangeTimeSlot('');
                     }}
                 >
                    {method === 'pickup' ? <ShoppingBagIcon /> : <ShoppingBagOutlinedIcon />}
@@ -512,6 +514,7 @@ const TimeSlots = ({
                                 onClick={() => {
                                     setSelectedDate(grouped.date);
                                     setSelectedTimeSlotId(null);
+                                    onChangeTimeSlot('');
                                 }}
                             >
                                 {`${day} ${month} ${weekday}`}
