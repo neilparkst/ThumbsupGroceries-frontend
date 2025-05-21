@@ -17,7 +17,7 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
 
     const token = useSelector((state: GlobalState) => state.user.token);
 
-    const { handleSubmit, control, reset, formState: {errors}, getValues, watch } = useForm({
+    const { handleSubmit, control, reset, formState: {errors}, watch } = useForm({
         mode: 'onBlur',
     });
     const watchAddedQuantity = watch("addedQuantity");
@@ -33,7 +33,7 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
                 if(formData.categories){
                     formData.categories = formData.categories.filter(category => (category as (number | '')) !== '')
                 }
-                if(getValues('addedQuantity')){
+                if(watchAddedQuantity && watchAddedQuantity !== '0'){
                     formData.quantity = null;
                 }
                 response = await updateProduct(editProductId, formData, token);
