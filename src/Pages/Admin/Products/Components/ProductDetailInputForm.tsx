@@ -74,7 +74,7 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
                 return;
             }
 
-            const productImageFiles = await loadImages(response.images);
+            const productImageFiles = await loadImages(response.images || []);
             setProduct(response);
             setProductImages(productImageFiles);
         }

@@ -142,7 +142,10 @@ const OrderItem = ({item} : {item: OrderItemType}) => {
             </div>
             <div className="OrderItemContent">
                 <div className="Product">
-                    <img src={`${domain}${image}`} alt={productName} />
+                    {image ?
+                        <img src={`${domain}${image}`} alt={productName} />:
+                        <img src="/no_image.avif" alt="no img" />
+                    }
                     <div className="NameAndPrice">
                         <div className="Name">
                             {productName}

@@ -57,5 +57,8 @@ const urlToFile = async (url: string): Promise<File> => {
 }
 
 export const loadImages = async (images: string[]): Promise<File[]> => {
+    if(images.length === 0){
+        return [];
+    }
     return Promise.all(images.map(image => urlToFile(`${domain}${image}`)));
 }

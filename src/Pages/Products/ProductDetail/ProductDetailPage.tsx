@@ -58,7 +58,7 @@ const ProductDetailPage = () => {
                         }
                     </div>
                     <div className="ImageList">
-                        {product?.images.map((image, idx) => (
+                        {product?.images?.map((image, idx) => (
                             <img
                                 key={image}
                                 src={`${domain}${image}`}

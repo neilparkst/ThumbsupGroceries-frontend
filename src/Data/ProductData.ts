@@ -9,7 +9,7 @@ export type Product = {
     price: number,
     priceUnitType: PriceUnitType,
     description: string,
-    images: string[],
+    images?: string[],
     quantity: number,
     categories: number[],
     rating: number,
