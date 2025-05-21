@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { ErrorMessage, webAPIUrl } from "./Settings";
 
-type PriceUnitType = 'ea' | 'kg';
+type PriceUnitType = 'ea' | 'g';
 export type ServiceMethod = 'delivery' | 'pickup';
 type TrolleyTimeSlotStatus = 'available' | 'unavailable';
 

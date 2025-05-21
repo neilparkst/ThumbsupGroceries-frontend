@@ -3,7 +3,7 @@ import { ErrorMessage, webAPIUrl } from "./Settings";
 
 export type ServiceMethod = 'delivery' | 'pickup';
 type OrderStatus = 'registered' | 'onDelivery' | 'completed' | 'canceling' | 'canceled';
-type PriceUnitType = 'ea' | 'kg';
+type PriceUnitType = 'ea' | 'g';
 
 export type OrderSimple = {
     orderId: number,
