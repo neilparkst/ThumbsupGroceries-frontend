@@ -297,7 +297,7 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
                             {productName}
                         </div>
                         <div className="Price">
-                            ${productPrice.toFixed(2)} / {productPriceUnitType}
+                            ${(productPrice / 100).toFixed(2)} / {productPriceUnitType}
                         </div>
                     </div>
                 </div>
@@ -379,7 +379,7 @@ const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
                     </Button>
                 </div>
                 <div className="TotalPricePerItem">
-                    ${totalPrice.toFixed(2)}
+                    ${(totalPrice / 100).toFixed(2)}
                 </div>
             </div>
         </div>
@@ -406,7 +406,7 @@ const TrolleySummary = ({
                     {capitalize(method)} Fee
                 </div>
                 <div className="Price">
-                    ${serviceFee.toFixed(2)}
+                    ${(serviceFee / 100).toFixed(2)}
                 </div>
             </div>
             <div className="Subtotal">
@@ -414,7 +414,7 @@ const TrolleySummary = ({
                     Bag Fee
                 </div>
                 <div className="Price">
-                    ${bagFee.toFixed(2)}
+                    ${(bagFee / 100).toFixed(2)}
                 </div>
             </div>
             <div className="Subtotal">
@@ -422,7 +422,7 @@ const TrolleySummary = ({
                     Subtotal
                 </div>
                 <div className="Price">
-                    ${subTotalPrice.toFixed(2)}
+                    ${(subTotalPrice / 100).toFixed(2)}
                 </div>
             </div>
             <div className="Total">
@@ -430,7 +430,7 @@ const TrolleySummary = ({
                     Total
                 </div>
                 <div className="Price">
-                    ${totalPrice.toFixed(2)}
+                    ${(totalPrice / 100).toFixed(2)}
                 </div>
             </div>
         </div>

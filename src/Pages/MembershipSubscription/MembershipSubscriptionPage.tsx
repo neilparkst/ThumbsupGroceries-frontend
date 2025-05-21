@@ -185,7 +185,7 @@ const MembershipOption = ({option, isSelected, onClick, isSelectable} : {option:
                 {name}
             </div>
             <div className="Price">
-                ${price}
+                ${(price / 100).toFixed(2)}
             </div>
             <div className="Duration">
                 Every {durationMonths} months

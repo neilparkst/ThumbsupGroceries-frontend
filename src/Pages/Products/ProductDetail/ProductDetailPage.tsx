@@ -84,7 +84,7 @@ const ProductDetailPage = () => {
                             />
                             <span className='ReviewCount'>({product.reviewCount})</span>
                         </div>
-                        <div className='PriceContainer'>{`$${product.price.toFixed(2)} / ${product.priceUnitType}`}</div>
+                        <div className='PriceContainer'>{`$${(product.price / 100).toFixed(2)} / ${product.priceUnitType}`}</div>
                     </div>
                     <div className="TrolleyContainer">
                         <TextField

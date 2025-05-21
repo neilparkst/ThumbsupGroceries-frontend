@@ -132,7 +132,8 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
                             disabled={watchAddedQuantity && watchAddedQuantity !== '0'}
                             slotProps={{
                                 htmlInput: {
-                                    min: 1
+                                    min: 1,
+                                    step: 1
                                 }
                             }}
                             required
@@ -152,6 +153,11 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
                                 {...field}
                                 type='number'
                                 label='addedQuantity'
+                                slotProps={{
+                                    htmlInput: {
+                                        step: 1
+                                    }
+                                }}
                                 fullWidth
                                 error={!!errors.quantity}
                                 helperText={errors.quantity?.message as ReactNode}
@@ -168,7 +174,13 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
                         <TextField
                             {...field}
                             type='number'
-                            label='Price'
+                            label='Price(in cents)'
+                            slotProps={{
+                                htmlInput: {
+                                    min: 1,
+                                    step: 1
+                                }
+                            }}
                             required
                             fullWidth
                             error={!!errors.price}

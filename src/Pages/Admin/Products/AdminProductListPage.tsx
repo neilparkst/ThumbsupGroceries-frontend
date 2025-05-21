@@ -151,7 +151,7 @@ const AdminProductListPage = () => {
                                 </td>
                                 <td>{product.name}</td>
                                 <td><img src={`${domain}${product.image}`} alt={product.name} /></td>
-                                <td>{product.price} / {product.priceUnitType}</td>
+                                <td>${(product.price / 100).toFixed(2)} / {product.priceUnitType}</td>
                                 <td>
                                     <Link to={`edit/${product.productId}`}>
                                         <Button variant='contained'>

@@ -148,7 +148,7 @@ const OrderItem = ({item} : {item: OrderItemType}) => {
                             {productName}
                         </div>
                         <div className="Price">
-                            ${price.toFixed(2)} / {priceUnitType}
+                            ${(price / 100).toFixed(2)} / {priceUnitType}
                         </div>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ const OrderItem = ({item} : {item: OrderItemType}) => {
                     {quantity}
                 </div>
                 <div className="TotalPricePerItem">
-                    ${totalPrice.toFixed(2)}
+                    ${(totalPrice / 100).toFixed(2)}
                 </div>
             </div>
         </div>
@@ -183,7 +183,7 @@ const OrderSummary = ({
                     {capitalize(method)} Fee
                 </div>
                 <div className="Price">
-                    ${serviceFee.toFixed(2)}
+                    ${(serviceFee / 100).toFixed(2)}
                 </div>
             </div>
             <div className="Subtotal">
@@ -191,7 +191,7 @@ const OrderSummary = ({
                     Bag Fee
                 </div>
                 <div className="Price">
-                    ${bagFee.toFixed(2)}
+                    ${(bagFee / 100).toFixed(2)}
                 </div>
             </div>
             <div className="Subtotal">
@@ -199,7 +199,7 @@ const OrderSummary = ({
                     Subtotal
                 </div>
                 <div className="Price">
-                    ${subTotalPrice.toFixed(2)}
+                    ${(subTotalPrice / 100).toFixed(2)}
                 </div>
             </div>
             <div className="Total">
@@ -207,7 +207,7 @@ const OrderSummary = ({
                     Total
                 </div>
                 <div className="Price">
-                    ${totalPrice.toFixed(2)}
+                    ${(totalPrice / 100).toFixed(2)}
                 </div>
             </div>
         </div>
