@@ -40,7 +40,7 @@ const HomePage = () => {
     );
 };
 
-const ITEM_WIDTH = 228 + 20;
+const ITEM_WIDTH = 194.69 + 20;
 const ProductCarousel = () => {
     const {data: products, isLoading} = useQuery({
         queryKey: ['products', {categoryId: undefined, sort: 'relevance', search: undefined, page: 1, pageSize: 24}],
@@ -63,7 +63,7 @@ const ProductCarousel = () => {
         const updateItemsPerPage = () => {
             if (carouselTrackRef.current) {
                 const containerWidth = carouselTrackRef.current.offsetWidth;
-                const itemNumber = Math.floor(containerWidth / ITEM_WIDTH);
+                const itemNumber = Math.floor((containerWidth + 20) / ITEM_WIDTH);
                 setItemsPerPage(itemNumber || 1); // minimum 1
             }
         };
