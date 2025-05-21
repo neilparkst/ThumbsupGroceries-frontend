@@ -57,7 +57,7 @@ const MyOrdersPage = () => {
                                     </div>
                                 </div>
                                 <div className='TotalAmount'>
-                                    ${order.totalAmount}
+                                    ${(order.totalAmount / 100).toFixed(2)}
                                 </div>
                                 <div className="Address">
                                     {(order.serviceMethod === 'delivery' ? 'Delivery to ' : 'Pick up at ') + order.chosenAddress}
