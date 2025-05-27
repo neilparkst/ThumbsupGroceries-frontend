@@ -85,6 +85,7 @@ const ProductCard = ({product}: {product: ProductSimple}) => {
                             }
 
                             queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+                            queryClient.invalidateQueries({queryKey: ['trolley']});
                             setPopperOpen(true);
                             setTimeout(() => setPopperOpen(false), 2000);
                         } else{

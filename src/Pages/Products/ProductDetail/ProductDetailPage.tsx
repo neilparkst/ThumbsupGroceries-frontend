@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import './ProductDetailPage.scss';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { addReview, getProduct, getReviews, Product, removeReview, ReviewType, updateReview } from '../../../Data/ProductData';
 import { toast } from 'react-toastify';
 import { domain } from '../../../Data/Settings';
@@ -9,10 +9,16 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '../../../Data/GlobalState/Store';
 import Modal from '../../../Components/Modal';
 import LoadingCircle from '../../../Components/LoadingCircle';
+import { addTrolleyItem } from '../../../Data/TrolleyData';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ProductDetailPage = () => {
     const params = useParams();
     const productId = params.productId && parseInt(params.productId);
+    
+    const token = useSelector((state: GlobalState) => state.user.token);
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const [ product, setProduct ] = useState<Product | null>(null);
     const [ selectedImageIndex, setSelectedImageIndex ] = useState(0);
@@ -104,9 +110,21 @@ const ProductDetailPage = () => {
                             variant="contained"
                             className='TrolleyButton'
                             ref={buttonRef}
-                            onClick={() => {
-                                setPopperOpen(true);
-                                setTimeout(() => setPopperOpen(false), 2000);
+                            onClick={async () => {
+                                if(token){
+                                    const response = await addTrolleyItem({productId: product.productId, priceUnitType: product.priceUnitType, quantity}, token);
+                                    if('errorMessage' in response){
+                                        toast.error('Failed to add item to trolley');
+                                        return;
+                                    }
+        
+                                    queryClient.invalidateQueries({queryKey: ['trolleyCount']});
+                                    queryClient.invalidateQueries({queryKey: ['trolley']});
+                                    setPopperOpen(true);
+                                    setTimeout(() => setPopperOpen(false), 2000);
+                                } else{
+                                    navigate('/signin');
+                                }
                             }}
                         >
                             Add to trolley
