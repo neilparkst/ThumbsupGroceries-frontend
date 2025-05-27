@@ -19,7 +19,7 @@ const TrolleyPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
 
     const queryClient = useQueryClient();
-    const {data: trolley, isLoading, isError} = useQuery({
+    const {data: trolley, isLoading: isTrolleyLoading, isError} = useQuery({
         queryKey: ['trolley', token],
         queryFn: async () => {
             if(token){
@@ -33,6 +33,8 @@ const TrolleyPage = () => {
         }
     });
     const chosenDateRef = useRef('');
+    const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+    const isLoading = isTrolleyLoading || isCheckoutLoading;
 
     const [selectedTrolleyItems, setSelectedTrolleyItems] = useState<Set<number>>(new Set());
     const [deliveryAddress, setDeliveryAddress] = useState('');
@@ -183,6 +185,8 @@ const TrolleyPage = () => {
                         }
 
                         if(token){
+                            setIsCheckoutLoading(true);
+                            // validate trolley
                             const trolleyValidationResponse = await validateTrolley({
                                 trolleyId: trolley.trolleyId,
                                 items: trolley.items.map(item => ({
@@ -201,12 +205,15 @@ const TrolleyPage = () => {
 
                             if('errorMessage' in trolleyValidationResponse){
                                 toast.error('Could not checkout the trolley');
+                                setIsCheckoutLoading(false);
                                 return;
                             } else if(!trolleyValidationResponse.isValid){
                                 toast.error('Prices of some products have changed. Please reload the page');
+                                setIsCheckoutLoading(false);
                                 return;
                             }
 
+                            // checkout trolley
                             const checkoutUrlResponse = await getTrolleyCheckoutUrl({
                                 trolleyId: trolley.trolleyId,
                                 chosenDate: chosenDateRef.current,
@@ -214,6 +221,7 @@ const TrolleyPage = () => {
                                 successUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/success',
                                 cancelUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/cancel'
                             }, token);
+                            setIsCheckoutLoading(false);
 
                             if('errorMessage' in checkoutUrlResponse){
                                 toast.error('Could not checkout the trolley');

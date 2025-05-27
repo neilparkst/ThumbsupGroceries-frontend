@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import './SignUpPage.scss';
 import { Box, Button, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
@@ -6,14 +6,19 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../../Components/Card';
 import { signUp, SignUpResponse } from '../../Data/AuthData';
 import { toast } from 'react-toastify';
+import LoadingCircle from '../../Components/LoadingCircle';
 
 const SignUpPage = () => {
     const navigate = useNavigate();
 
     const { handleSubmit, control, formState: {errors} } = useForm({mode: 'onBlur'});
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const onSubmit = async (formData: any) => {
+        setIsLoading(true);
         const response = await signUp(formData);
+        setIsLoading(false);
         if('errorMessage' in response){
             toast.error(response.errorMessage);
             return;
@@ -138,6 +143,7 @@ const SignUpPage = () => {
                     </Button>
                 </Box>
             </Card>
+            <LoadingCircle isOpen={isLoading} />
         </div>
     );
 };

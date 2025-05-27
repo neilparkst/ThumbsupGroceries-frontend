@@ -68,13 +68,14 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
             }
             setIsLoading(true);
             const response = await getProduct(editProductId);
-            setIsLoading(false);
             if('errorMessage' in response){
+                setIsLoading(false);
                 toast.error(response.errorMessage);
                 return;
             }
 
             const productImageFiles = await loadImages(response.images || []);
+            setIsLoading(false);
             setProduct(response);
             setProductImages(productImageFiles);
         }

@@ -50,7 +50,8 @@ const MembershipSelection = () => {
 
     const [isOptionsLoading, setIsOptionsLoading] = useState(false);
     const [isMyMembershipLoading, setIsMyMembershipLoading] = useState(false);
-    const isLoading = isOptionsLoading || isMyMembershipLoading;
+    const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(false);
+    const isLoading = isOptionsLoading || isMyMembershipLoading || isSubscriptionLoading;
 
     useEffect(() => {
         const getNewMembershipOptions = async () => {
@@ -95,10 +96,12 @@ const MembershipSelection = () => {
             <Button
                 onClick={async () => {
                     if(token){
+                        setIsSubscriptionLoading(true);
                         const portalUrl = await getMembershipPortalUrl({
                             returnUrl: window.location.href
                         }, token);
-    
+                        setIsSubscriptionLoading(false);
+
                         if('errorMessage' in portalUrl){
                             toast.error('Could not request subscription');
                             return;
@@ -118,11 +121,13 @@ const MembershipSelection = () => {
             <Button
                 onClick={async () => {
                     if(token){
+                        setIsSubscriptionLoading(true);
                         const checkoutUrlResponse = await getMembershipCheckoutUrl({
                             planId: selectedPlanId,
                             successUrl: window.location.protocol + '//' + window.location.host + '/membershipsubscription/checkout/success',
                             cancelUrl: window.location.protocol + '//' + window.location.host + '/membershipsubscription/checkout/cancel'
                         }, token);
+                        setIsSubscriptionLoading(false);
     
                         if('errorMessage' in checkoutUrlResponse){
                             toast.error('Could not request subscription');

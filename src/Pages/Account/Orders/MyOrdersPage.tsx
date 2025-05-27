@@ -6,16 +6,21 @@ import { GlobalState } from '../../../Data/GlobalState/Store';
 import { toast } from 'react-toastify';
 import { getOrders, OrderSimple } from '../../../Data/OrderData';
 import { Link } from 'react-router-dom';
+import LoadingCircle from '../../../Components/LoadingCircle';
 
 const MyOrdersPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
 
     const [orders, setOrders] = useState<OrderSimple[]>([]);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         const getNewOrders = async () => {
             if(token){
+                setIsLoading(true);
                 const response = await getOrders(token);
+                setIsLoading(false);
                 if('errorMessage' in response){
                     toast.error('Could not load orders');
                     return;
@@ -67,6 +72,7 @@ const MyOrdersPage = () => {
                     )
                 })}
             </div>
+            <LoadingCircle isOpen={isLoading} />
         </Card>
     );
 };

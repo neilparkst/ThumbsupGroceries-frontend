@@ -42,7 +42,9 @@ const PersonalDetailsEditPage = () => {
 
     const onSubmit = async (formData: any) => {
         if(token){
+            setIsLoading(true);
             const response = await updateMyInfo(formData, token);
+            setIsLoading(false);
             if('errorMessage' in response){
                 toast.error(response.errorMessage);
                 return;
@@ -137,6 +139,7 @@ const PersonalDetailsEditPage = () => {
                     </Button>
                 </Box>
             </Card>
+            <LoadingCircle isOpen={isLoading} />
         </div>
     );
 };

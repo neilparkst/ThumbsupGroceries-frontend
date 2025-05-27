@@ -83,19 +83,20 @@ const OrderPage = () => {
                                 color='error'
                                 onClick={async () => {
                                     if(token){
+                                        setIsLoading(true);
                                         const response = await cancelOrder(order.orderId, token);
+                                        setIsLoading(false);
                                         if('errorMessage' in response){
                                             toast.error('Could not cancel order');
                                             return;
                                         }
+                                        setIsModalOpen(false);
+                                        toast.success('Order cancel requested');
+                                        navigate('/account/orders');
                                     } else{
                                         toast.error('Could not cancel order');
-                                        return;
                                     }
 
-                                    setIsModalOpen(false);
-                                    toast.success('Order cancel requested');
-                                    navigate('/account/orders');
                                 }}
                             >
                                 Yes
@@ -112,6 +113,7 @@ const OrderPage = () => {
                     </div>
                 </Modal>
             </div>
+            <LoadingCircle isOpen={isLoading} />
         </div>
     );
 };

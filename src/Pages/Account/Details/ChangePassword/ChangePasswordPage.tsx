@@ -8,6 +8,7 @@ import { Button, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 import { registerTokenAndUserInfo } from '../../../../Data/GlobalState/UserSlice';
 import Card from '../../../../Components/Card';
+import LoadingCircle from '../../../../Components/LoadingCircle';
 
 const ChangePasswordPage = () => {
     const navigate = useNavigate();
@@ -18,11 +19,15 @@ const ChangePasswordPage = () => {
     const [ oldPassword, setOldPassword ] = useState("");
     const [ newPassword, setNewPassword ] = useState("");
 
+    const [ isLoading, setIsloading ] = useState(false);
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
         if(token){
+            setIsloading(true);
             const response = await updateMyPassword({oldPassword, newPassword}, token);
+            setIsloading(false);
             if('errorMessage' in response){
                 toast.error(response.errorMessage);
                 return;
@@ -67,6 +72,7 @@ const ChangePasswordPage = () => {
                     </Button>
                 </form>
             </Card>
+            <LoadingCircle isOpen={isLoading} />
         </div>
     );
 };
