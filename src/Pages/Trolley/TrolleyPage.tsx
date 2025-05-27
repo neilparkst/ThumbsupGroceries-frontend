@@ -1,19 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
 import { getTimeSlots, getTrolleyCheckoutUrl, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateServiceMethod, updateTrolleyItem, validateTrolley } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
-import { Button, ButtonBase, capitalize, Checkbox, TextField } from '@mui/material';
+import { Box, Button, ButtonBase, capitalize, Checkbox, LinearProgress, TextField, Typography } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { domain } from '../../Data/Settings';
 import { Cancel } from '@mui/icons-material';
-import { getMyInfo } from '../../Data/UserData';
+import { getMyInfo, getMyMembership, UserMembership } from '../../Data/UserData';
+import { Link } from 'react-router-dom';
 
 const TrolleyPage = () => {
     const token = useSelector((state: GlobalState) => state.user.token);
@@ -66,10 +67,12 @@ const TrolleyPage = () => {
             <div className='TrolleyPage'>
                 <div className="TrolleyPageHeader">
                     <div className="Intro">
-                        <span className='Title'>Trolley</span>
-                        {trolley?.itemCount === 0 &&
-                        <span className='ItemCount'>No items</span>
-                        }
+                        <div className="TrolleyInfo">
+                            <span className='Title'>Trolley</span>
+                            {trolley?.itemCount === 0 &&
+                            <span className='ItemCount'>No items</span>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,8 +83,11 @@ const TrolleyPage = () => {
         <div className='TrolleyPage'>
             <div className="TrolleyPageHeader">
                 <div className="Intro">
-                    <span className='Title'>Trolley</span>
-                    <span className='ItemCount'>{trolley.itemCount} items</span>
+                    <div className='TrolleyInfo'>
+                        <span className='Title'>Trolley</span>
+                        <span className='ItemCount'>{trolley.itemCount} items</span>
+                    </div>
+                    <MembershipPromotion subTotal={trolley.subTotalPrice} />
                 </div>
                 <div className="SelectAllAndRemove">
                     <Checkbox
@@ -242,6 +248,119 @@ const TrolleyPage = () => {
         </div>
     );
 };
+
+const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
+    const token = useSelector((state: GlobalState) => state.user.token);
+
+    const [userMembership, setUserMembership] = useState<UserMembership | {}>();
+
+    useEffect(() => {
+        const getCurrentUserMembership = async () => {
+            if(token){
+                const response = await getMyMembership(token);
+                if('errorMessage' in response){
+                    toast.error('Could not load my membership info');
+                    return;
+                }
+                setUserMembership(response);
+            } else{
+                setUserMembership({});
+            }
+        }
+
+        getCurrentUserMembership();
+    }, [token])
+
+    let description;
+    let graphic;
+    if(userMembership === undefined || !('membershipId' in userMembership) || userMembership.status !== 'active'){
+        description = "Get Membership for Free Delivery!"
+        graphic = (
+            <div className="MembershipButton">
+                <Link to="/membershipsubscription">
+                    <Button>
+                        Go to membership
+                    </Button>
+                </Link>
+            </div>
+        )
+    } else if(userMembership.planName === 'Saver'){
+        if(subTotal < 8000){
+            description = (<>
+                <span>${((8000 - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
+            </>);
+        } else{
+            description = "Free Delivery Now!"
+        }
+        graphic = (
+            <Box sx={{ width: 200, textAlign: 'right' }}>
+                <LinearProgress
+                    variant="determinate"
+                    value={Math.min(subTotal / 8000 * 100, 100)}
+                />
+                <Typography variant="caption" color="text.secondary">
+                    ${(subTotal / 100).toFixed(2)} / $80.00
+                </Typography>
+            </Box>
+        )
+    } else if(userMembership.planName === "Super Saver"){
+        if(subTotal >= 8000){
+            description = "Free Delivery & Free Bag Now!"
+            graphic = (
+                <Box sx={{ width: 200 }}>
+                    <LinearProgress
+                        variant="determinate"
+                        value={Math.min(subTotal / 8000 * 100, 100)}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                        ${(subTotal / 100).toFixed(2)} / $80.00
+                    </Typography>
+                </Box>
+            )
+        } else if(subTotal >= 6000){
+            description = (<>
+                <span>${((8000 - subTotal) / 100).toFixed(2)}</span> more for Free Bag!
+            </>);
+            graphic = (
+                <Box sx={{ width: 200 }}>
+                    <LinearProgress
+                        variant="determinate"
+                        value={Math.min(subTotal / 8000 * 100, 100)}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                        ${(subTotal / 100).toFixed(2)} / $80.00
+                    </Typography>
+                </Box>
+            )
+        } else{
+            description = (<>
+                <span>${((6000 - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
+            </>);
+            graphic = (
+                <Box sx={{ width: 200 }}>
+                    <LinearProgress
+                        variant="determinate"
+                        value={subTotal / 6000 * 100}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                        ${(subTotal / 100).toFixed(2)} / $60.00
+                    </Typography>
+                </Box>
+            )
+        }
+    }
+
+    return(
+        <div className="MembershipPromotion">
+            <div className="Description">
+                {description}
+            </div>
+            <div className="Graphic">
+                {graphic}
+            </div>
+        </div>
+    )
+})
 
 const TrolleyItem = ({item} : {item: TrolleyItemType}) => {
     const {
