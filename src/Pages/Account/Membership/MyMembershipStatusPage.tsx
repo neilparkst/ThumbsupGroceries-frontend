@@ -70,11 +70,11 @@ const MyMembershipStatusPage = () => {
                         </tr>
                         <tr>
                             <td>Start Date</td>
-                            <td>{new Date(userMembership.startDate).toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
+                            <td>{new Date(userMembership.startDate + "Z").toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
                         </tr>
                         <tr>
                             <td>Next Payment Date</td>
-                            <td>{new Date(userMembership.renewalDate).toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
+                            <td>{new Date(userMembership.renewalDate + "Z").toLocaleString('nz', {month: 'short', day: '2-digit', year: 'numeric'})}</td>
                         </tr>
                     </tbody>
                 </table>

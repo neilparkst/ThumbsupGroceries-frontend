@@ -37,7 +37,7 @@ const MyOrdersPage = () => {
         <Card title='Orders'>
             <div className='MyOrdersPage'>
                 {orders.map(order => {
-                    const orderDate = (new Date(order.orderDate)).toLocaleString('nz', {day: '2-digit', month: 'short', year: 'numeric'});
+                    const orderDate = (new Date(order.orderDate + "Z")).toLocaleString('nz', {day: '2-digit', month: 'short', year: 'numeric'});
                     const chosenDateObject= new Date(order.chosenDate);
                     const chosenDate = chosenDateObject.toLocaleString('nz', {day: '2-digit', month: 'short', year: 'numeric'});
                     const chosenStartTime = chosenDateObject.getHours() + ":" + (chosenDateObject.getMinutes() < 10 ? '0' + chosenDateObject.getMinutes() : chosenDateObject.getMinutes());
