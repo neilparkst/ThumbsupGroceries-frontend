@@ -22,9 +22,6 @@ const MyOrdersPage = () => {
                 }
 
                 setOrders(response);
-    
-            } else{
-                toast.error('Could not load orders');
             }
         }
 

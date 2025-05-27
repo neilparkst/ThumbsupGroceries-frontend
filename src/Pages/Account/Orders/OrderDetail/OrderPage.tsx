@@ -90,6 +90,7 @@ const OrderPage = () => {
                                         }
                                     } else{
                                         toast.error('Could not cancel order');
+                                        return;
                                     }
 
                                     setIsModalOpen(false);

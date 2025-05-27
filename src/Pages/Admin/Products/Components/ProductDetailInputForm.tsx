@@ -56,7 +56,7 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
             }
 
         } else{
-            console.log("token doesn't exist");
+            toast.error("Error occurred!");
         }
     }
 
