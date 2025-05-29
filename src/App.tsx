@@ -38,8 +38,7 @@ import AdminProductEditPage from './Pages/Admin/Products/Edit/AdminProductEditPa
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
-      retry: false
+      refetchOnWindowFocus: false
     }
   }
 });
