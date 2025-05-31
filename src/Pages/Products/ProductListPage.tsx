@@ -32,8 +32,8 @@ const ProductListPage = () => {
             return response as CategoryTree;
         }
     })
-    const categoryTreeLengthRef = useRef(0);
 
+    const categoryTreeLengthRef = useRef(0); // to check if recalculation is needed
     const categoryName = useMemo(() => {
         if((categoryTree?.length || 0 ) === categoryTreeLengthRef.current){
             return;
@@ -131,8 +131,8 @@ const CategoryList = ({categoryTree, initialCategoryId} : {categoryTree: Categor
     const navigate = useNavigate();
 
     const [ selectedCategories, setSelectedCategories ] = useState<number[]>([]);
-    const categoryTreeLengthRef = useRef(0);
     
+    const categoryTreeLengthRef = useRef(0); // to check if recalculation is needed
     useEffect(() => {
         if((categoryTree?.length || 0 ) === categoryTreeLengthRef.current){
             return;

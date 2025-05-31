@@ -274,7 +274,8 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
     let description;
     let graphic;
     if(userMembership === undefined || !('membershipId' in userMembership) || userMembership.status !== 'active'){
-        description = "Get Membership for Free Delivery!"
+        description = "Get Membership for Free Delivery!";
+
         graphic = (
             <div className="MembershipButton">
                 <Link to="/membershipsubscription">
@@ -283,15 +284,17 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
                     </Button>
                 </Link>
             </div>
-        )
+        );
+
     } else if(userMembership.planName === 'Saver'){
         if(subTotal < 8000){
             description = (<>
                 <span>${((8000 - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
             </>);
         } else{
-            description = "Free Delivery Now!"
+            description = "Free Delivery Now!";
         }
+
         graphic = (
             <Box sx={{ width: 200, textAlign: 'right' }}>
                 <LinearProgress
@@ -302,10 +305,12 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
                     ${(subTotal / 100).toFixed(2)} / $80.00
                 </Typography>
             </Box>
-        )
+        );
+
     } else if(userMembership.planName === "Super Saver"){
         if(subTotal >= 8000){
-            description = "Free Delivery & Free Bag Now!"
+            description = "Free Delivery & Free Bag Now!";
+
             graphic = (
                 <Box sx={{ width: 200 }}>
                     <LinearProgress
@@ -317,10 +322,12 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
                     </Typography>
                 </Box>
             )
+
         } else if(subTotal >= 6000){
             description = (<>
                 <span>${((8000 - subTotal) / 100).toFixed(2)}</span> more for Free Bag!
             </>);
+
             graphic = (
                 <Box sx={{ width: 200 }}>
                     <LinearProgress
@@ -331,11 +338,13 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
                         ${(subTotal / 100).toFixed(2)} / $80.00
                     </Typography>
                 </Box>
-            )
+            );
+
         } else{
             description = (<>
                 <span>${((6000 - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
             </>);
+
             graphic = (
                 <Box sx={{ width: 200 }}>
                     <LinearProgress
@@ -346,7 +355,8 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
                         ${(subTotal / 100).toFixed(2)} / $60.00
                     </Typography>
                 </Box>
-            )
+            );
+            
         }
     }
 

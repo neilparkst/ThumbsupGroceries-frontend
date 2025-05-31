@@ -60,6 +60,7 @@ const ProductDetailInputForm = ({editProductId} : {editProductId?: number}) => {
         }
     }
 
+    // only for edit mode
     const [ isLoading, setIsLoading ] = useState(false);
     useEffect(() => {
         const getProductInfo = async () => {
