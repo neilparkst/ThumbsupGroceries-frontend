@@ -289,12 +289,12 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
         );
 
     } else if(userMembership.planName === 'Saver'){
-        if(subTotal < THRESHOLD_HIGH){
+        if(subTotal >= THRESHOLD_HIGH){
+            description = "Free Delivery Now!";
+        } else{
             description = (<>
                 <span>${((THRESHOLD_HIGH - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
             </>);
-        } else{
-            description = "Free Delivery Now!";
         }
 
         graphic = (
