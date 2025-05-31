@@ -249,6 +249,8 @@ const TrolleyPage = () => {
     );
 };
 
+const THRESHOLD_HIGH = 8000;
+const THRESHOLD_LOW = 6000;
 const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
     const token = useSelector((state: GlobalState) => state.user.token);
 
@@ -287,9 +289,9 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
         );
 
     } else if(userMembership.planName === 'Saver'){
-        if(subTotal < 8000){
+        if(subTotal < THRESHOLD_HIGH){
             description = (<>
-                <span>${((8000 - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
+                <span>${((THRESHOLD_HIGH - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
             </>);
         } else{
             description = "Free Delivery Now!";
@@ -299,60 +301,60 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
             <Box sx={{ width: 200, textAlign: 'right' }}>
                 <LinearProgress
                     variant="determinate"
-                    value={Math.min(subTotal / 8000 * 100, 100)}
+                    value={Math.min(subTotal / THRESHOLD_HIGH * 100, 100)}
                 />
                 <Typography variant="caption" color="text.secondary">
-                    ${(subTotal / 100).toFixed(2)} / $80.00
+                    ${(subTotal / 100).toFixed(2)} / ${(THRESHOLD_HIGH / 100).toFixed(2)}
                 </Typography>
             </Box>
         );
 
     } else if(userMembership.planName === "Super Saver"){
-        if(subTotal >= 8000){
+        if(subTotal >= THRESHOLD_HIGH){
             description = "Free Delivery & Free Bag Now!";
 
             graphic = (
                 <Box sx={{ width: 200 }}>
                     <LinearProgress
                         variant="determinate"
-                        value={Math.min(subTotal / 8000 * 100, 100)}
+                        value={Math.min(subTotal / THRESHOLD_HIGH * 100, 100)}
                     />
                     <Typography variant="caption" color="text.secondary">
-                        ${(subTotal / 100).toFixed(2)} / $80.00
+                        ${(subTotal / 100).toFixed(2)} / ${(THRESHOLD_HIGH / 100).toFixed(2)}
                     </Typography>
                 </Box>
             )
 
-        } else if(subTotal >= 6000){
+        } else if(subTotal >= THRESHOLD_LOW){
             description = (<>
-                <span>${((8000 - subTotal) / 100).toFixed(2)}</span> more for Free Bag!
+                <span>${((THRESHOLD_HIGH - subTotal) / 100).toFixed(2)}</span> more for Free Bag!
             </>);
 
             graphic = (
                 <Box sx={{ width: 200 }}>
                     <LinearProgress
                         variant="determinate"
-                        value={Math.min(subTotal / 8000 * 100, 100)}
+                        value={Math.min(subTotal / THRESHOLD_HIGH * 100, 100)}
                     />
                     <Typography variant="caption" color="text.secondary">
-                        ${(subTotal / 100).toFixed(2)} / $80.00
+                        ${(subTotal / 100).toFixed(2)} / ${(THRESHOLD_HIGH / 100).toFixed(2)}
                     </Typography>
                 </Box>
             );
 
         } else{
             description = (<>
-                <span>${((6000 - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
+                <span>${((THRESHOLD_LOW - subTotal) / 100).toFixed(2)}</span> more for Free Delivery!
             </>);
 
             graphic = (
                 <Box sx={{ width: 200 }}>
                     <LinearProgress
                         variant="determinate"
-                        value={subTotal / 6000 * 100}
+                        value={subTotal / THRESHOLD_LOW * 100}
                     />
                     <Typography variant="caption" color="text.secondary">
-                        ${(subTotal / 100).toFixed(2)} / $60.00
+                        ${(subTotal / 100).toFixed(2)} / ${(THRESHOLD_LOW / 100).toFixed(2)}
                     </Typography>
                 </Box>
             );
