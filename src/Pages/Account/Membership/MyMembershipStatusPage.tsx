@@ -66,7 +66,7 @@ const MyMembershipStatusPage = () => {
                         </tr>
                         <tr>
                             <td>Membership Price</td>
-                            <td>${(userMembership.planPrice / 100).toFixed(2)} per month</td>
+                            <td>${(userMembership.planPrice / 100).toFixed(2)} per {userMembership.planName === "Saver" ? 'month' : 'year'}</td>
                         </tr>
                         <tr>
                             <td>Start Date</td>

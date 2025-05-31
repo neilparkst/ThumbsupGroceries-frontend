@@ -314,7 +314,7 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
             description = "Free Delivery & Free Bag Now!";
 
             graphic = (
-                <Box sx={{ width: 200 }}>
+                <Box sx={{ width: 200, textAlign: 'right' }}>
                     <LinearProgress
                         variant="determinate"
                         value={Math.min(subTotal / THRESHOLD_HIGH * 100, 100)}
@@ -331,7 +331,7 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
             </>);
 
             graphic = (
-                <Box sx={{ width: 200 }}>
+                <Box sx={{ width: 200, textAlign: 'right' }}>
                     <LinearProgress
                         variant="determinate"
                         value={Math.min(subTotal / THRESHOLD_HIGH * 100, 100)}
@@ -348,7 +348,7 @@ const MembershipPromotion = memo(({subTotal} : {subTotal: number}) => {
             </>);
 
             graphic = (
-                <Box sx={{ width: 200 }}>
+                <Box sx={{ width: 200, textAlign: 'right' }}>
                     <LinearProgress
                         variant="determinate"
                         value={subTotal / THRESHOLD_LOW * 100}
