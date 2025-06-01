@@ -77,5 +77,6 @@ Replace `<server domain for production mode>` and `<server domain for test mode>
 src/
 ├── Components   # Shared UI components used across the app
 ├── Data         # API definitions and server communication logic
+│   └── Util     # Shared utility functions used across the app
 ├── Pages        # Route-based page components
 ```
