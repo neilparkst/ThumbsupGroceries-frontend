@@ -25,11 +25,23 @@ cd ThumbsupGroceries-frontend
 
 # Install dependencies
 npm install
+```
 
+---
+
+## ▶️ Running the App (Development)
+
+```bash
 # Start the development server
 npm run start
+```
 
-# (Optional) Build the app for production
+---
+
+## 📦 (Optional) Build for Production
+
+```bash
+# Build the app for production
 npm run build:production
 ```
 
@@ -37,7 +49,7 @@ npm run build:production
 
 ## ⚙️ Setup
 
-In /src/Data/Settings.ts, modify the domain line to follow this format using your own production and test server URLs:
+In `/src/Data/Settings.ts`, modify the `domain` line to follow this format using your own production and test server URLs:
 
 ```ts
 export const domain = process.env.REACT_APP_ENV === 'production'
