@@ -1,3 +1,7 @@
+# 🛒 ThumbsUp Groceries – Frontend
+
+This is the frontend of **ThumbsUp Groceries**, an online grocery shopping platform where users can browse, filter, and purchase groceries. The application is responsive, user-friendly, and feature-rich, supporting both customer and admin roles.
+
 ## 🚀 Live Demo
 
 Check it out here:  
@@ -80,3 +84,15 @@ src/
 │   └── Util     # Shared utility functions used across the app
 ├── Pages        # Route-based page components
 ```
+
+---
+
+## ✨ Features
+
+- Product listing with search, sort, and category filter
+- Product details and customer reviews
+- Trolley management with delivery/pickup options
+- Secure Stripe checkout
+- Membership subscription with Stripe integration
+- Personal details update and password change
+- Admin panel for product management
