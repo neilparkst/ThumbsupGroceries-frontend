@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import './TrolleyPage.scss';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '../../Data/GlobalState/Store';
-import { getTimeSlots, getTrolleyCheckoutUrl, getTrolleyContent, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateServiceMethod, updateTrolleyItem, validateTrolley } from '../../Data/TrolleyData';
+import { getTimeSlots, getTrolleyCheckoutUrl, getTrolleyContent, occupyTimeSlot, removeTrolleyItem, removeTrolleyItems, ServiceMethod, TrolleyItemRequest, TrolleyItemType, TrolleyTimeSlot, updateServiceMethod, updateTrolleyItem, validateTrolley } from '../../Data/TrolleyData';
 import LoadingCircle from '../../Components/LoadingCircle';
 import { toast } from 'react-toastify';
 import { Box, Button, ButtonBase, capitalize, Checkbox, LinearProgress, TextField, Typography } from '@mui/material';
@@ -33,12 +33,12 @@ const TrolleyPage = () => {
             }
         }
     });
-    const chosenDateRef = useRef('');
     const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
     const isLoading = isTrolleyLoading || isCheckoutLoading;
 
     const [selectedTrolleyItems, setSelectedTrolleyItems] = useState<Set<number>>(new Set());
     const [deliveryAddress, setDeliveryAddress] = useState('');
+    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<number | null>(null);
 
     useEffect(() => {
         if(isError){
@@ -160,6 +160,7 @@ const TrolleyPage = () => {
             <TimeSlots
                 method={trolley.method}
                 address={trolley.method === 'delivery' ? deliveryAddress : 'ThumbsUp Grocery Branch'}
+                selectedTimeSlotId={selectedTimeSlotId}
                 onChangeMethod={async (newServiceMethod: ServiceMethod) => {
                     if(token){
                         const response = await updateServiceMethod(trolley.trolleyId, newServiceMethod, token);
@@ -173,8 +174,8 @@ const TrolleyPage = () => {
                         toast.error(`Could not change to ${newServiceMethod}`);
                     }
                 }}
-                onChangeTimeSlot={(chosenDate: string) => {
-                    chosenDateRef.current = chosenDate;
+                onChangeTimeSlot={(chosenTimeSlot: number | null) => {
+                    setSelectedTimeSlotId(chosenTimeSlot);
                 }}
             />
             <div className='CheckoutButton'>
@@ -182,7 +183,7 @@ const TrolleyPage = () => {
                     fullWidth
                     variant='contained'
                     onClick={async () => {
-                        if(!chosenDateRef.current){
+                        if(!selectedTimeSlotId){
                             toast.error('Please select timeslot');
                             return;
                         } else if(trolley.method === 'delivery' && !deliveryAddress){
@@ -219,10 +220,18 @@ const TrolleyPage = () => {
                                 return;
                             }
 
+                            // occupy time-slot
+                            const occupyTimeSlotResponse = await occupyTimeSlot(selectedTimeSlotId, token);
+                            if('errorMessage' in occupyTimeSlotResponse){
+                                toast.error('The selected time-slot is not available. Please reload the page');
+                                setIsCheckoutLoading(false);
+                                return;
+                            }
+
                             // checkout trolley
                             const checkoutUrlResponse = await getTrolleyCheckoutUrl({
                                 trolleyId: trolley.trolleyId,
-                                chosenDate: chosenDateRef.current,
+                                chosenTimeSlot: selectedTimeSlotId,
                                 chosenAddress: trolley.method === 'delivery' ? deliveryAddress : 'ThumbsUp Grocery Branch',
                                 successUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/success',
                                 cancelUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/cancel'
@@ -582,17 +591,18 @@ const TrolleySummary = ({
 const TimeSlots = ({
     method,
     address,
+    selectedTimeSlotId,
     onChangeMethod,
     onChangeTimeSlot
 } : {
     method: ServiceMethod,
     address: string,
+    selectedTimeSlotId: number | null,
     onChangeMethod: (method: ServiceMethod) => void,
-    onChangeTimeSlot: (chosenDate: string) => void
+    onChangeTimeSlot: (chosenTimeSlot: number | null) => void
 }) => {
     const [groupedTimeSlots, setGroupedTimeSlots] = useState<GroupedTimeSlotsType>([]);
     const [selectedDate, setSelectedDate] = useState('');
-    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<number | null>(null);
 
     const timeslotsForSelectedDate = groupedTimeSlots.find(grouped => grouped.date === selectedDate)?.slots;
 
@@ -621,8 +631,7 @@ const TimeSlots = ({
                     onClick={() => {
                         onChangeMethod('delivery');
                         setSelectedDate('');
-                        setSelectedTimeSlotId(null);
-                        onChangeTimeSlot('');
+                        onChangeTimeSlot(null);
                     }}
                 >
                    {method === 'delivery' ? <LocalShippingIcon /> : <LocalShippingOutlinedIcon />}
@@ -633,8 +642,7 @@ const TimeSlots = ({
                     onClick={() => {
                         onChangeMethod('pickup');
                         setSelectedDate('');
-                        setSelectedTimeSlotId(null);
-                        onChangeTimeSlot('');
+                        onChangeTimeSlot(null);
                     }}
                 >
                    {method === 'pickup' ? <ShoppingBagIcon /> : <ShoppingBagOutlinedIcon />}
@@ -655,8 +663,7 @@ const TimeSlots = ({
                                 className={`Date${selectedDate === grouped.date ? ' Selected' : ''}`}
                                 onClick={() => {
                                     setSelectedDate(grouped.date);
-                                    setSelectedTimeSlotId(null);
-                                    onChangeTimeSlot('');
+                                    onChangeTimeSlot(null);
                                 }}
                             >
                                 {`${day} ${month} ${weekday}`}
@@ -677,8 +684,7 @@ const TimeSlots = ({
                                     if(slot.status === 'unavailable'){
                                         return;
                                     }
-                                    setSelectedTimeSlotId(slot.timeSlotId);
-                                    onChangeTimeSlot(slot.start);
+                                    onChangeTimeSlot(slot.timeSlotId);
                                 }}
                             >
                                 {`${startTime.getHours()}:${startTime.getMinutes() < 10 ? ('0' + startTime.getMinutes()) : startTime.getMinutes()} - ${endTime.getHours()}:${endTime.getMinutes() < 10 ? ('0' + endTime.getMinutes()) : endTime.getMinutes()}`}

@@ -57,6 +57,10 @@ export type TrolleyTimeSlot = {
     status: TrolleyTimeSlotStatus
 };
 
+type OccupyTimeSlotResponse = {
+    success: boolean
+}
+
 type TrolleyItemForValidationRequest = {
     productId: number,
     productPrice: number,
@@ -81,7 +85,7 @@ type TrolleyValidationResponse = {
 
 type TrolleyCheckoutSessionRequest = {
     trolleyId: number,
-    chosenDate: string,
+    chosenTimeSlot: number,
     chosenAddress: string,
     successUrl: string,
     cancelUrl: string
@@ -187,6 +191,17 @@ export const updateServiceMethod = async (trolleyId: number, serviceMethod: Serv
 export const getTimeSlots = async (serviceMethod: ServiceMethod): Promise<TrolleyTimeSlot[] | ErrorMessage> => {
     try{
         const response = await axios.get(`${webAPIUrl}/trolley/time-slot/${serviceMethod}`);
+
+        return response.data;
+    } catch (error){
+        const e = error as AxiosError;
+        return {errorMessage: ((e.response?.data as {title: string})?.title ?? e.response?.data) || "error occurred!"};
+    }
+}
+
+export const occupyTimeSlot = async (timeSlotId: number, token: string): Promise<OccupyTimeSlotResponse | ErrorMessage> => {
+    try{
+        const response = await axios.post(`${webAPIUrl}/trolley/time-slot/${timeSlotId}/occupy}`, null, {headers: {Authorization: `Bearer ${token}`}});
 
         return response.data;
     } catch (error){
