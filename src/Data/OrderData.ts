@@ -10,7 +10,8 @@ export type OrderSimple = {
     serviceMethod: ServiceMethod,
     totalAmount: number,
     chosenAddress: string,
-    chosenDate: string,
+    chosenStartDate: string,
+    chosenEndDate: string,
     orderStatus: OrderStatus,
     orderDate: string
 };
@@ -35,7 +36,8 @@ export type OrderContent = {
     serviceFee: number,
     totalAmount: number,
     chosenAddress: string,
-    chosenDate: string,
+    chosenStartDate: string,
+    chosenEndDate: string,
     orderStatus: OrderStatus,
     orderDate: string
 };

@@ -38,14 +38,18 @@ const MyOrdersPage = () => {
             <div className='MyOrdersPage'>
                 {orders.map(order => {
                     const orderDate = (new Date(order.orderDate + "Z")).toLocaleString('nz', {day: '2-digit', month: 'short', year: 'numeric'});
-                    const chosenDateObject= new Date(order.chosenDate);
-                    const chosenDate = chosenDateObject.toLocaleString('nz', {day: '2-digit', month: 'short', year: 'numeric'});
-                    const chosenStartTime = chosenDateObject.getHours() + ":" + (chosenDateObject.getMinutes() < 10 ? '0' + chosenDateObject.getMinutes() : chosenDateObject.getMinutes());
-                    if(order.serviceMethod === 'delivery'){
-                        chosenDateObject.setHours(chosenDateObject.getHours() + 2);
+                    const chosenStartDateObject= new Date(order.chosenStartDate);
+                    const chosenStartDate = chosenStartDateObject.toLocaleString('nz', {day: '2-digit', month: 'short', year: 'numeric'});
+                    const chosenStartTime = chosenStartDateObject.getHours() + ":" + (chosenStartDateObject.getMinutes() < 10 ? '0' + chosenStartDateObject.getMinutes() : chosenStartDateObject.getMinutes());
+                    
+                    const chosenEndDateObject = new Date(order.chosenEndDate);
+                    if(order.chosenStartDate === order.chosenEndDate){
+                        if(order.serviceMethod === 'delivery'){
+                            chosenEndDateObject.setHours(chosenEndDateObject.getHours() + 2);
+                        }
+                        chosenEndDateObject.setMinutes(chosenEndDateObject.getMinutes() + 30);
                     }
-                    chosenDateObject.setMinutes(chosenDateObject.getMinutes() + 30);
-                    const chosenEndTime = chosenDateObject.getHours() + ":" + (chosenDateObject.getMinutes() < 10 ? '0' + chosenDateObject.getMinutes() : chosenDateObject.getMinutes());
+                    const chosenEndTime = chosenEndDateObject.getHours() + ":" + (chosenEndDateObject.getMinutes() < 10 ? '0' + chosenEndDateObject.getMinutes() : chosenEndDateObject.getMinutes());
 
                     return (
                         <Link to={`/account/orders/${order.orderId}`} style={{textDecoration: 'none'}}>
@@ -65,7 +69,7 @@ const MyOrdersPage = () => {
                                     {(order.serviceMethod === 'delivery' ? 'Delivery to ' : 'Pick up at ') + order.chosenAddress}
                                 </div>
                                 <div className="ExpectedDate">
-                                    {`Expected Time: ${chosenDate} ${chosenStartTime} - ${chosenEndTime}`}
+                                    {`Expected Time: ${chosenStartDate} ${chosenStartTime} - ${chosenEndTime}`}
                                 </div>
                             </div>
                         </Link>
