@@ -679,13 +679,13 @@ const TimeSlots = ({
 
                         return (
                             <div
-                                key={slot.timeSlotId}
-                                className={`Time${selectedTimeSlotId === slot.timeSlotId ? ' Selected' : ''}${slot.status === 'unavailable' ? ' Unavailable' : ''}`}
+                                key={slot.slotId}
+                                className={`Time${selectedTimeSlotId === slot.slotId ? ' Selected' : ''}${slot.status === 'unavailable' ? ' Unavailable' : ''}`}
                                 onClick={() => {
                                     if(slot.status === 'unavailable'){
                                         return;
                                     }
-                                    onChangeTimeSlot(slot.timeSlotId);
+                                    onChangeTimeSlot(slot.slotId);
                                 }}
                             >
                                 {`${startTime.getHours()}:${startTime.getMinutes() < 10 ? ('0' + startTime.getMinutes()) : startTime.getMinutes()} - ${endTime.getHours()}:${endTime.getMinutes() < 10 ? ('0' + endTime.getMinutes()) : endTime.getMinutes()}`}

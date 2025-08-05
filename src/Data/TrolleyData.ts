@@ -51,7 +51,7 @@ export type TrolleyItemDeleteResponse = {
 };
 
 export type TrolleyTimeSlot = {
-    timeSlotId: number,
+    slotId: number,
     start: string,
     end: string,
     status: TrolleyTimeSlotStatus
@@ -202,7 +202,7 @@ export const getTimeSlots = async (serviceMethod: ServiceMethod): Promise<Trolle
 
 export const occupyTimeSlot = async (timeSlotId: number, token: string): Promise<OccupyTimeSlotResponse | ErrorMessage> => {
     try{
-        const response = await axios.post(`${webAPIUrl}/trolley/time-slot/${timeSlotId}/occupy}`, null, {headers: {Authorization: `Bearer ${token}`}});
+        const response = await axios.post(`${webAPIUrl}/trolley/time-slot/${timeSlotId}/occupy`, null, {headers: {Authorization: `Bearer ${token}`}});
 
         return response.data;
     } catch (error){
