@@ -232,6 +232,7 @@ const TrolleyPage = () => {
                             const checkoutUrlResponse = await getTrolleyCheckoutUrl({
                                 trolleyId: trolley.trolleyId,
                                 chosenTimeSlot: selectedTimeSlotId,
+                                timeSlotRecordId: occupyTimeSlotResponse.timeSlotRecordId,
                                 chosenAddress: trolley.method === 'delivery' ? deliveryAddress : 'ThumbsUp Grocery Branch',
                                 successUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/success',
                                 cancelUrl: window.location.protocol + '//' + window.location.host + '/trolley/checkout/cancel'

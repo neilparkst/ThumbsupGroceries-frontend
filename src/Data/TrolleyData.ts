@@ -58,7 +58,7 @@ export type TrolleyTimeSlot = {
 };
 
 type OccupyTimeSlotResponse = {
-    success: boolean
+    timeSlotRecordId: number
 }
 
 type TrolleyItemForValidationRequest = {
@@ -86,6 +86,7 @@ type TrolleyValidationResponse = {
 type TrolleyCheckoutSessionRequest = {
     trolleyId: number,
     chosenTimeSlot: number,
+    timeSlotRecordId: number,
     chosenAddress: string,
     successUrl: string,
     cancelUrl: string
