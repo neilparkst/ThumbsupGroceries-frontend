@@ -22,7 +22,7 @@ jobs:
       run: npm install
 
     - name: Build React app
-      run: npm run build
+      run: npm run build:production
 
     - name: Upload to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -30,3 +30,4 @@ jobs:
         app-name: "thumbsupgroceries"
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: build 
+
