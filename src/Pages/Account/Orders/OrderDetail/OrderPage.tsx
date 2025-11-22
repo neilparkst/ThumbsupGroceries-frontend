@@ -120,8 +120,6 @@ const OrderPage = () => {
 
 const OrderItem = ({item} : {item: OrderItemType}) => {
     const {
-        orderItemId,
-        productId,
         productName,
         price,
         priceUnitType,
